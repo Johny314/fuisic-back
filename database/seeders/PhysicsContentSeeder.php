@@ -18,18 +18,18 @@ class PhysicsContentSeeder extends Seeder
 {
     public function run(): void
     {
-        $teacher = User::query()->where('user_type', UserType::teacher->value)->first();
+        $admin = User::query()->where('user_type', UserType::admin->value)->first();
 
-        if (! $teacher) {
-            $this->command?->warn('Teacher not found. Run UserSeeder first.');
+        if (! $admin) {
+            $this->command?->warn('Admin not found. Run UserSeeder first.');
 
             return;
         }
 
         $sections = Section::query()->pluck('id', 'name');
 
-        $this->seedCardSets($teacher->id, $sections);
-        $this->seedTests($teacher->id, $sections);
+        $this->seedCardSets($admin->id, $sections);
+        $this->seedTests($admin->id, $sections);
     }
 
     private function seedCardSets(int $userId, $sections): void

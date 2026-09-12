@@ -10,6 +10,7 @@ use App\OpenApi\Response\NotFound;
 use App\OpenApi\Response\Ok;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
@@ -26,6 +27,7 @@ class Destroy extends Controller
     #[Response(200, Ok::class)]
     public function __invoke(Test $test): JsonResponse
     {
+        ContentAccess::abortUnlessCanManageTest($test);
         $test->delete();
 
         return new JsonResponse;

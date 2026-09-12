@@ -2,7 +2,7 @@
 
 API-бэкенд платформы FUISIC на Laravel 11: карточки, тесты, задания и авторизация через пакет [fuisic/laravel-auth](https://github.com/Johny314/fuisic-laravel-auth).
 
-**Версия:** `v2.1.0`
+**Версия:** `v2.2.0`
 
 ## Стек
 

@@ -23,6 +23,15 @@ class CardSet extends Model
         'class',
         'difficulty',
         'user_id',
+        'logo_path',
+    ];
+
+    protected $appends = [
+        'logo_url',
+    ];
+
+    protected $hidden = [
+        'logo_path',
     ];
 
     public function section(): BelongsTo
@@ -38,5 +47,10 @@ class CardSet extends Model
     public function cards(): HasMany
     {
         return $this->hasMany(Card::class);
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        return app(\App\Services\MediaStorage::class)->url($this->logo_path);
     }
 }

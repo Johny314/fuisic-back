@@ -10,6 +10,8 @@ use App\OpenApi\Put;
 use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
+use App\Services\MediaStorage;
+use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
 
 class Update extends Controller
@@ -23,9 +25,17 @@ class Update extends Controller
     #[RequestBody(Data::class)]
 
     #[Response(200, Data::class)]
-    public function __invoke(CardSet $card_set, Data $data): Data
+    public function __invoke(CardSet $card_set, Data $data, MediaStorage $media): Data
     {
-        $card_set->update($data->toArray());
+        ContentAccess::abortUnlessCanManageCardSet($card_set);
+
+        $payload = $data->persistAttributes();
+        if (array_key_exists('logo_path', $payload) && $payload['logo_path'] !== $card_set->logo_path) {
+            $media->delete($card_set->logo_path);
+        }
+
+        $card_set->update($payload);
+        $card_set->load(['section', 'user']);
 
         return Data::from($card_set);
     }

@@ -18,5 +18,8 @@ class UserUpdate extends Data
     public string $email;
 
     #[Property(example: 'password')]
-    public ?string $password;
+    public ?string $password = null;
+
+    #[Property(example: 'avatars/abc.png')]
+    public ?string $avatar_path = null;
 }

@@ -12,6 +12,7 @@ use App\OpenApi\Parameter\PerPage;
 use App\OpenApi\Parameter\Sort;
 use App\OpenApi\Response\IndexPaginatedResponse;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Spatie\LaravelData\PaginatedDataCollection;
@@ -31,13 +32,17 @@ class Index extends Controller
     #[Filter(name: 'section_id', example: 1)]
     #[Filter(name: 'class', example: '10')]
     #[Filter(name: 'difficulty', example: 'hard')]
+    #[Filter(name: 'scope', example: 'studio')]
     #[Page]
     #[PerPage]
 
     #[IndexPaginatedResponse(Data::class, description: 'Список наборов карточек')]
     public function __invoke(Request $request): PaginatedDataCollection
     {
-        $models = QueryBuilder::for(CardSetModel::query())
+        $query = CardSetModel::query()->with(['section', 'user']);
+        ContentAccess::applyIndexScope($query, $request->input('filter.scope'));
+
+        $models = QueryBuilder::for($query)
             ->allowedSorts(['id', 'name'])
             ->allowedFilters([
                 'name',
@@ -45,6 +50,7 @@ class Index extends Controller
                 AllowedFilter::exact('subject'),
                 AllowedFilter::exact('class'),
                 AllowedFilter::exact('difficulty'),
+                AllowedFilter::callback('scope', static fn () => null),
             ])
             ->orderByDesc('created_at')
             ->paginate(

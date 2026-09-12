@@ -31,13 +31,29 @@ class Task extends Data
 
     public static function fromRequest(Request $request): Task
     {
-        return static::from($request->toArray());
+        $payload = $request->toArray();
+        if (array_key_exists('test_id', $payload) && $payload['test_id'] !== null) {
+            $payload['test_id'] = (string) $payload['test_id'];
+        }
+
+        return static::from($payload);
     }
 
     public static function fromModel(Model $model): Task
     {
         return static::from([
-                'test' => Test::from($model->test),
+                'test' => $model->relationLoaded('test') && $model->test
+                    ? Test::from($model->test)
+                    : null,
             ] + $model->toArray());
+    }
+
+    public function persistAttributes(): array
+    {
+        return array_filter([
+            'test_id' => $this->test_id,
+            'problem_statement' => $this->problem_statement,
+            'answer' => $this->answer,
+        ], static fn ($value) => $value !== null);
     }
 }

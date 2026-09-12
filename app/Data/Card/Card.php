@@ -25,4 +25,24 @@ class Card extends Data
 
     #[Property(example: 'Math addition problem')]
     public ?string $description;
+
+    public static function fromRequest(Request $request): Card
+    {
+        $payload = $request->toArray();
+        if (array_key_exists('card_set_id', $payload) && $payload['card_set_id'] !== null) {
+            $payload['card_set_id'] = (string) $payload['card_set_id'];
+        }
+
+        return static::from($payload);
+    }
+
+    public function persistAttributes(): array
+    {
+        return array_filter([
+            'card_set_id' => $this->card_set_id,
+            'front_text' => $this->front_text,
+            'back_text' => $this->back_text,
+            'description' => $this->description,
+        ], static fn ($value) => $value !== null);
+    }
 }

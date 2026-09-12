@@ -13,7 +13,7 @@ use App\OpenApi\Property;
 use Illuminate\Http\Request;
 use OpenApi\Attributes\Schema;
 
-#[Schema(required: ['name', 'section_id', 'user_id'])]
+#[Schema(required: ['name', 'section_id'])]
 class Test extends Data
 {
     #[Property(readOnly: true, example: '1')]
@@ -53,9 +53,28 @@ class Test extends Data
 
     public static function fromModel(Model $model): Test
     {
+        $model->loadMissing(['section', 'user']);
+
         return static::from([
-                'section' => Section::from($model->section),
-                'user' => User::from($model->user),
+                'section' => $model->section ? Section::from($model->section) : null,
+                'user' => $model->user ? User::from($model->user) : null,
             ] + $model->toArray());
+    }
+
+    public function persistAttributes(?int $userId = null): array
+    {
+        $payload = [
+            'name' => $this->name,
+            'subject' => $this->subject instanceof Subject ? $this->subject->value : $this->subject,
+            'section_id' => $this->section_id,
+            'class' => $this->class,
+            'difficulty' => $this->difficulty,
+        ];
+
+        if ($userId !== null) {
+            $payload['user_id'] = $userId;
+        }
+
+        return array_filter($payload, static fn ($value) => $value !== null && $value !== '');
     }
 }

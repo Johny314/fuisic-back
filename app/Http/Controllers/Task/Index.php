@@ -12,9 +12,11 @@ use App\OpenApi\Parameter\PerPage;
 use App\OpenApi\Parameter\Sort;
 use App\OpenApi\Response\IndexPaginatedResponse;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Spatie\LaravelData\PaginatedDataCollection;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class Index extends Controller
@@ -32,10 +34,19 @@ class Index extends Controller
     #[IndexPaginatedResponse(Data::class, description: 'Список задач')]
     public function __invoke(Request $request): PaginatedDataCollection
     {
-        $models = QueryBuilder::for(TaskModel::query())
+        $user = ContentAccess::requireUser();
+        $query = TaskModel::query()->whereHas('test', function ($testQuery) use ($user) {
+            if (! ContentAccess::isAdmin($user)) {
+                $testQuery->where('user_id', $user->id);
+            }
+        });
+
+        $models = QueryBuilder::for($query)
             ->allowedSorts(['id', 'test_id'])
-            ->allowedFilters(['test_id'])
-            ->orderByDesc('created_at')
+            ->allowedFilters([
+                AllowedFilter::exact('test_id'),
+            ])
+            ->orderBy('id')
             ->paginate(
                 perPage: $request->per_page,
                 page: $request->page

@@ -27,11 +27,17 @@ class User extends Authenticatable implements MustVerifyEmail, WebAuthnAuthentic
         'email',
         'password',
         'user_type',
+        'avatar_path',
+    ];
+
+    protected $appends = [
+        'avatar_url',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'avatar_path',
     ];
 
     protected function casts(): array
@@ -40,5 +46,10 @@ class User extends Authenticatable implements MustVerifyEmail, WebAuthnAuthentic
             'email_verified_at' => 'datetime',
             'user_type' => UserType::class,
         ];
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return app(\App\Services\MediaStorage::class)->url($this->avatar_path);
     }
 }

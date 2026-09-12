@@ -10,6 +10,8 @@ use App\OpenApi\Parameter\ModelId;
 use App\OpenApi\Response\NotFound;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 
@@ -24,12 +26,17 @@ class ShowCards extends Controller
 
     #[Response(200, Data::class)]
     #[Response(404, NotFound::class)]
-    public function __invoke(CardSet $card_set): Collection
+    public function __invoke(Request $request, CardSet $card_set): Collection
     {
-        return Data::collect(
-            $card_set->cards()
-                ->inRandomOrder()
-                ->get()
-        );
+        ContentAccess::abortUnlessCanViewCardSet($card_set);
+
+        $cards = $card_set->cards();
+        if ($request->boolean('ordered')) {
+            $cards->orderBy('id');
+        } else {
+            $cards->inRandomOrder();
+        }
+
+        return Data::collect($cards->get());
     }
 }

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post(Uri::files->value, \App\Http\Controllers\File\Store::class);
+
     Route::post(Uri::card_set->value, CardSet\Store::class);
     Route::put( Uri::card_set_id->value, CardSet\Update::class);
     Route::delete(Uri::card_set_id->value, CardSet\Destroy::class);
@@ -36,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put( Uri::test_id->value, Test\Update::class);
     Route::delete(Uri::test_id->value, Test\Destroy::class);
     Route::post(Uri::check_answers->value, Test\CheckAnswers::class);
+
+    Route::get(Uri::task->value, Task\Index::class);
 });
 
 Route::get(Uri::card_set->value, CardSet\Index::class);
@@ -51,7 +55,6 @@ Route::get(Uri::user_id->value, User\Show::class);
 Route::get(Uri::card->value, Card\Index::class);
 Route::get(Uri::card_id->value, Card\Show::class);
 
-Route::get(Uri::task->value, Task\Index::class);
 Route::get(Uri::task_id->value, Task\Show::class);
 
 Route::get(Uri::test->value, Test\Index::class);

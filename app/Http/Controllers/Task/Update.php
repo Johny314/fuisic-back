@@ -10,6 +10,7 @@ use App\OpenApi\Put;
 use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
 
 class Update extends Controller
@@ -25,7 +26,12 @@ class Update extends Controller
     #[Response(200, Data::class)]
     public function __invoke(Task $task, Data $data): Data
     {
-        $task->update($data->toArray());
+        $task->loadMissing('test');
+        ContentAccess::abortUnlessCanManageTest($task->test);
+
+        $payload = $data->persistAttributes();
+        unset($payload['test_id']);
+        $task->update($payload);
 
         return Data::from($task);
     }

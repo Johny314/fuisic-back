@@ -9,6 +9,7 @@ use App\OpenApi\Post;
 use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
 
 class Store extends Controller
@@ -23,7 +24,9 @@ class Store extends Controller
     #[Response(201, Data::class)]
     public function __invoke(Data $data): Data
     {
-        $card_set = CardSet::query()->create($data->toArray());
+        $user = ContentAccess::requireUser();
+        $card_set = CardSet::query()->create($data->persistAttributes($user->id));
+        $card_set->load(['section', 'user']);
 
         return Data::from($card_set);
     }

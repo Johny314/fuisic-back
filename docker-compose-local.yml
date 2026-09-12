@@ -16,6 +16,8 @@ services:
                 condition: service_healthy
             rabbitmq:
                 condition: service_healthy
+            minio:
+                condition: service_started
 
     nginx:
         image: nginx:alpine
@@ -110,6 +112,51 @@ services:
             retries: 3
             timeout: 5s
 
+    mailpit:
+        image: axllent/mailpit
+        ports:
+            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+            - '${FORWARD_MAILPIT_SMTP_PORT:-1025}:1025'
+        networks:
+            - app-network
+
+    minio:
+        image: quay.io/minio/minio:latest
+        command: server /data --console-address ":9001"
+        environment:
+            MINIO_ROOT_USER: '${MINIO_ROOT_USER:-fuisic}'
+            MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD:-fuisicsecret}'
+        ports:
+            - '${FORWARD_MINIO_PORT:-9000}:9000'
+            - '${FORWARD_MINIO_CONSOLE_PORT:-9001}:9001'
+        volumes:
+            - minio_data:/data
+        networks:
+            - app-network
+
+    minio-init:
+        image: quay.io/minio/mc:latest
+        depends_on:
+            - minio
+        networks:
+            - app-network
+        entrypoint: >
+            /bin/sh -c "
+            i=0;
+            until mc alias set local http://minio:9000 $${MINIO_ROOT_USER:-fuisic} $${MINIO_ROOT_PASSWORD:-fuisicsecret}; do
+              i=$$((i+1));
+              if [ $$i -gt 20 ]; then exit 1; fi;
+              sleep 2;
+            done;
+            mc mb --ignore-existing local/$${AWS_BUCKET:-fuisic};
+            mc anonymous set download local/$${AWS_BUCKET:-fuisic};
+            exit 0;
+            "
+        environment:
+            MINIO_ROOT_USER: '${MINIO_ROOT_USER:-fuisic}'
+            MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD:-fuisicsecret}'
+            AWS_BUCKET: '${AWS_BUCKET:-fuisic}'
+
     queue:
         image: fuisic-app
         command: php artisan queue:work rabbitmq --queue=auth.notifications,default --sleep=3 --tries=3 --max-time=3600
@@ -133,6 +180,8 @@ volumes:
     redis_data:
         driver: local
     rabbitmq_data:
+        driver: local
+    minio_data:
         driver: local
 
 networks:
