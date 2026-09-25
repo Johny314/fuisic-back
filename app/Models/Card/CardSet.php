@@ -5,6 +5,7 @@ namespace App\Models\Card;
 use App\Models\Section;
 use App\Models\User;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Database\Factories\CardSetFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,11 @@ class CardSet extends Model
 {
     use CrudTrait;
     use HasFactory, SoftDeletes;
+
+    protected static function newFactory(): CardSetFactory
+    {
+        return CardSetFactory::new();
+    }
 
     protected $fillable = [
         'name',
