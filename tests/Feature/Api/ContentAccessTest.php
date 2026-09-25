@@ -44,6 +44,21 @@ class ContentAccessTest extends TestCase
             ->assertJsonPath('data.0.id', $public->id);
     }
 
+    public function test_catalog_does_not_expose_owner_email(): void
+    {
+        CardSet::factory()->for($this->admin)->create();
+        Test::factory()->for($this->admin)->create();
+
+        foreach (['/card_set', '/test'] as $url) {
+            $this->getJson($url)
+                ->assertOk()
+                ->assertJsonPath('data.0.user.name', $this->admin->name)
+                ->assertJsonMissingPath('data.0.user.email')
+                ->assertJsonMissingPath('data.0.user.email_verified_at')
+                ->assertJsonMissingPath('data.0.user.user_type');
+        }
+    }
+
     public function test_mine_scope_requires_auth_and_returns_own_sets(): void
     {
         $own = CardSet::factory()->for($this->owner)->create();

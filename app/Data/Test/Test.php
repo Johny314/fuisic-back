@@ -4,7 +4,7 @@ namespace App\Data\Test;
 
 use App\Data\Data;
 use App\Data\Section;
-use App\Data\User\User;
+use App\Data\User\Owner;
 use App\Enums\Classifications;
 use App\Enums\Difficulty;
 use App\Enums\Subject;
@@ -41,7 +41,7 @@ class Test extends Data
     public ?Section $section;
 
     #[Property(readOnly: true)]
-    public ?User $user;
+    public ?Owner $user;
 
     public static function fromRequest(Request $request): Test
     {
@@ -57,7 +57,7 @@ class Test extends Data
 
         return static::from([
             'section' => $model->section ? Section::from($model->section) : null,
-            'user' => $model->user ? User::from($model->user) : null,
+            'user' => $model->user ? Owner::from($model->user) : null,
         ] + $model->toArray());
     }
 
