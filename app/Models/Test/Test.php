@@ -5,6 +5,7 @@ namespace App\Models\Test;
 use App\Models\Section;
 use App\Models\User;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Database\Factories\TestFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,11 @@ class Test extends Model
 {
     use CrudTrait;
     use HasFactory, SoftDeletes;
+
+    protected static function newFactory(): TestFactory
+    {
+        return TestFactory::new();
+    }
 
     protected $fillable = [
         'name',
