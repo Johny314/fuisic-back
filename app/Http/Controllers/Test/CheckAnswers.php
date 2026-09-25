@@ -49,7 +49,7 @@ class CheckAnswers extends Controller
         return Results::from([
             'time' => $answers->time,
             'results' => $results,
-            'total_score' => count(array_filter($results, fn($result) => $result->is_correct))
+            'total_score' => count(array_filter($results, fn ($result) => $result->is_correct)),
         ]);
     }
 }

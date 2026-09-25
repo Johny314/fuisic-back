@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Filters;
 
 use App\Data\Filters\Difficulty as Data;
-use App\Enums\Uri;
 use App\Enums\Difficulty as filter;
+use App\Enums\Uri;
 use App\OpenApi\Get;
 use App\OpenApi\Response\NotFound;
 use App\OpenApi\Response\Response;
@@ -24,7 +24,7 @@ class Difficulties extends Controller
     public function __invoke(): Collection
     {
         return Data::collect(
-            collect(Filter::cases())->map(fn(Filter $case) => ['name' => $case->value])
+            collect(Filter::cases())->map(fn (Filter $case) => ['name' => $case->value])
         );
     }
 }

@@ -42,10 +42,10 @@ class Task extends Data
     public static function fromModel(Model $model): Task
     {
         return static::from([
-                'test' => $model->relationLoaded('test') && $model->test
-                    ? Test::from($model->test)
-                    : null,
-            ] + $model->toArray());
+            'test' => $model->relationLoaded('test') && $model->test
+                ? Test::from($model->test)
+                : null,
+        ] + $model->toArray());
     }
 
     public function persistAttributes(): array

@@ -3,7 +3,6 @@
 namespace App\Data\Card;
 
 use App\Data\Data;
-use App\Models\Card\Card as Model;
 use App\OpenApi\Property;
 use Illuminate\Http\Request;
 use OpenApi\Attributes\Schema;

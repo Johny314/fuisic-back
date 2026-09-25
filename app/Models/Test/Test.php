@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Test extends Model
 {
-    use HasFactory, SoftDeletes;
     use CrudTrait;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',

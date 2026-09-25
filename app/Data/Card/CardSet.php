@@ -61,10 +61,10 @@ class CardSet extends Data
         $model->loadMissing(['section', 'user']);
 
         return static::from([
-                'section' => $model->section ? Section::from($model->section) : null,
-                'user' => $model->user ? User::from($model->user) : null,
-                'logo_url' => $model->logo_url,
-            ] + $model->toArray());
+            'section' => $model->section ? Section::from($model->section) : null,
+            'user' => $model->user ? User::from($model->user) : null,
+            'logo_url' => $model->logo_url,
+        ] + $model->toArray());
     }
 
     public function persistAttributes(?int $userId = null): array

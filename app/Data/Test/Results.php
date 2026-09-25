@@ -4,8 +4,8 @@ namespace App\Data\Test;
 
 use App\Data\Data;
 use App\OpenApi\Property;
-use OpenApi\Attributes\Schema;
 use OpenApi\Attributes;
+use OpenApi\Attributes\Schema;
 
 #[Schema]
 class Results extends Data

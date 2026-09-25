@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Card;
 
 use App\Data\Card\Card as Data;
-use App\Models\Card\Card as CardModel;
 use App\Enums\Uri;
+use App\Models\Card\Card as CardModel;
 use App\OpenApi\Get;
 use App\OpenApi\Parameter\Filter;
 use App\OpenApi\Parameter\Page;

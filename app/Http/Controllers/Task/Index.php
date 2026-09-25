@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Task;
 
 use App\Data\Test\Task as Data;
-use App\Models\Test\Task as TaskModel;
 use App\Enums\Uri;
+use App\Models\Test\Task as TaskModel;
 use App\OpenApi\Get;
 use App\OpenApi\Parameter\Filter;
 use App\OpenApi\Parameter\Page;

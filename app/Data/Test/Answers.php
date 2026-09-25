@@ -4,9 +4,8 @@ namespace App\Data\Test;
 
 use App\Data\Data;
 use App\OpenApi\Property;
-use Illuminate\Support\Collection;
-use OpenApi\Attributes\Schema;
 use OpenApi\Attributes;
+use OpenApi\Attributes\Schema;
 
 #[Schema]
 class Answers extends Data

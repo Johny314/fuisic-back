@@ -38,8 +38,8 @@ class CardSetHistory extends Data
     public static function fromModel(Model $model): CardSetHistory
     {
         return static::from([
-                'cardSet' => CardSet::from($model->cardSet),
-                'user' => User::from($model->user),
-            ] + $model->toArray());
+            'cardSet' => CardSet::from($model->cardSet),
+            'user' => User::from($model->user),
+        ] + $model->toArray());
     }
 }

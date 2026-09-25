@@ -3,12 +3,10 @@
 namespace App\Data\User;
 
 use App\Data\Data;
-use App\Enums\UserType;
 use App\OpenApi\Property;
-use Illuminate\Http\Request;
 use OpenApi\Attributes\Schema;
 
-#[Schema(required: ['name', 'email', ])]
+#[Schema(required: ['name', 'email'])]
 class UserUpdate extends Data
 {
     #[Property(example: 'John Doe')]
