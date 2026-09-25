@@ -3,7 +3,7 @@
 namespace App\Data\Card;
 
 use App\Data\Data;
-use App\Data\User\User;
+use App\Data\User\Owner;
 use App\Models\Card\CardSetHistory as Model;
 use App\OpenApi\Property;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class CardSetHistory extends Data
     public ?CardSet $cardSet;
 
     #[Property(readOnly: true)]
-    public ?User $user;
+    public ?Owner $user;
 
     public static function fromRequest(Request $request): CardSetHistory
     {
@@ -39,7 +39,7 @@ class CardSetHistory extends Data
     {
         return static::from([
             'cardSet' => CardSet::from($model->cardSet),
-            'user' => User::from($model->user),
+            'user' => Owner::from($model->user),
         ] + $model->toArray());
     }
 }

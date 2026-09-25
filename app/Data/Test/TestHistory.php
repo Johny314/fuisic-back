@@ -3,7 +3,7 @@
 namespace App\Data\Test;
 
 use App\Data\Data;
-use App\Data\User\User;
+use App\Data\User\Owner;
 use App\Models\Test\TestHistory as Model;
 use App\OpenApi\Property;
 use OpenApi\Attributes\Schema;
@@ -30,7 +30,7 @@ class TestHistory extends Data
     public ?Test $test;
 
     #[Property(readOnly: true)]
-    public ?User $user;
+    public ?Owner $user;
 
     #[Property(readOnly: true)]
     public ?TaskHistory $answers;
@@ -43,7 +43,7 @@ class TestHistory extends Data
             'answer' => $model->answer,
             'completion_time' => $model->completion_time,
             'test' => Test::from($model->test),
-            'user' => User::from($model->user),
+            'user' => Owner::from($model->user),
             'answers' => TaskHistory::from($model->answers),
         ]);
     }
