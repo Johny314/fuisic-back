@@ -38,10 +38,10 @@ class CardSet extends Data
     #[Property(writeOnly: true, example: '1')]
     public ?string $user_id;
 
-    #[Property(schema: Section::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?Section $section;
 
-    #[Property(schema: User::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?User $user;
 
     #[Hidden]

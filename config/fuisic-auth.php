@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserType;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 
 $packageConfig = dirname(__DIR__).'/vendor/fuisic/auth/config/fuisic-auth.php';
@@ -12,7 +13,7 @@ if (! file_exists($packageConfig)) {
 return array_replace_recursive(
     require $packageConfig,
     [
-        'user_model' => App\Models\User::class,
+        'user_model' => User::class,
 
         'register' => [
             'validation' => [

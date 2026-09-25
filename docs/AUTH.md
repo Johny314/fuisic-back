@@ -26,9 +26,9 @@ Production — VCS repository на GitHub (см. README пакета).
 // app/Models/User.php
 use Fuisic\Auth\Traits\HasFuisicAuth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Laragear\WebAuthn\Contracts\WebAuthnAuthenticatable;
+use Laravel\Passkeys\Contracts\PasskeyUser;
 
-class User extends Authenticatable implements MustVerifyEmail, WebAuthnAuthenticatable
+class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     use HasApiTokens, HasFuisicAuth;
 }
@@ -99,17 +99,19 @@ DELETE /oauth/vkontakte     → отвязка
 
 ## Passkeys (Apple Face ID / Touch ID)
 
-WebAuthn через Laragear. RP ID для local:
+WebAuthn через [laravel/passkeys](https://github.com/laravel/passkeys-server) (свои API-маршруты на токенах, опции в кэше). RP ID для local:
 
 ```env
 FUISIC_AUTH_PASSKEY_RP_ID=localhost
 ```
 
-Фронтенд вызывает `/passkeys/login/options` → WebAuthn API → `/passkeys/login`.
+Фронтенд вызывает `/passkeys/login/options` → WebAuthn API → `/passkeys/login` с `{ credential }`. Origin берётся из `FRONTEND_URL` и `APP_URL`.
 
 ## Admin (Backpack)
 
-Админка `/admin` использует **отдельную** session-авторизацию Backpack, не Sanctum API. Middleware `CheckIfAdmin` проверяет `user_type === admin`.
+Админка `/admin` использует **отдельную** session-авторизацию Backpack (группа `web`, CSRF включён), не Sanctum API. Middleware `CheckIfAdmin` проверяет `user_type === admin`.
+
+API (`routes/api.php`) подключён группой `api` без префикса: без сессий и CSRF, авторизация только Bearer-токеном.
 
 ## Миграции пакета
 
@@ -121,7 +123,7 @@ FUISIC_AUTH_PASSKEY_RP_ID=localhost
 Дополнительно в проекте:
 
 - `personal_access_tokens` (Sanctum)
-- `webauthn_credentials` (publish Laragear)
+- `passkeys` (`vendor:publish --tag=passkeys-migrations`, уже в `database/migrations`)
 
 ## Сиды
 

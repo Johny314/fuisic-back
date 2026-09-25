@@ -26,7 +26,7 @@ class Task extends Data
     #[Property(example: 'Addition problem')]
     public ?string $description;
 
-    #[Property(schema: Test::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?Test $test;
 
     public static function fromRequest(Request $request): Task

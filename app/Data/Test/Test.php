@@ -37,10 +37,10 @@ class Test extends Data
     #[Property(readOnly: true, example: '1')]
     public ?string $user_id;
 
-    #[Property(schema: Section::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?Section $section;
 
-    #[Property(schema: User::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?User $user;
 
     public static function fromRequest(Request $request): Test

@@ -42,8 +42,8 @@ class Index extends Controller
         });
 
         $models = QueryBuilder::for($query)
-            ->allowedSorts(['id', 'test_id'])
-            ->allowedFilters([
+            ->allowedSorts(...['id', 'test_id'])
+            ->allowedFilters(...[
                 AllowedFilter::exact('test_id'),
             ])
             ->orderBy('id')

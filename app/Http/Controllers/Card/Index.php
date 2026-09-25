@@ -36,8 +36,8 @@ class Index extends Controller
         $models = QueryBuilder::for(
             CardModel::query()->whereHas('cardSet', fn ($sets) => ContentAccess::applyVisibleScope($sets))
         )
-            ->allowedSorts(['id', 'card_set_id'])
-            ->allowedFilters(['card_set_id'])
+            ->allowedSorts(...['id', 'card_set_id'])
+            ->allowedFilters(...['card_set_id'])
             ->orderByDesc('created_at')
             ->paginate(
                 perPage: $request->per_page,
