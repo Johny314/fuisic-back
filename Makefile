@@ -2,7 +2,7 @@ USER_ID ?= $(shell id -u)
 GROUP_ID ?= $(shell id -g)
 COMPOSE = docker compose
 
-setup-local: env-prepare storage-setup composer-install link-docker-compose-file up app-key-generate package-discover db-setup swagger-generate
+setup-local: env-prepare storage-setup composer-install up app-key-generate package-discover db-setup swagger-generate
 
 start: up
 stop: down
@@ -16,23 +16,18 @@ storage-setup:
 composer-install:
 	docker run --rm -u "$(USER_ID):$(GROUP_ID)" \
 		-v "$(CURDIR):/var/www/html" \
-		-v "$(CURDIR)/../fuisic-laravel-auth:/var/www/html/../fuisic-laravel-auth:ro" \
+		-v "$(CURDIR)/../fuisic-auth:/var/www/fuisic-auth:ro" \
 		-w /var/www/html \
 		-e CACHE_STORE=array \
 		laravelsail/php83-composer:latest \
 		composer install --ignore-platform-reqs --no-scripts
 	docker run --rm -u "$(USER_ID):$(GROUP_ID)" \
 		-v "$(CURDIR):/var/www/html" \
-		-v "$(CURDIR)/../fuisic-laravel-auth:/var/www/html/../fuisic-laravel-auth:ro" \
+		-v "$(CURDIR)/../fuisic-auth:/var/www/fuisic-auth:ro" \
 		-w /var/www/html \
 		-e CACHE_STORE=array \
 		laravelsail/php83-composer:latest \
 		composer dump-autoload
-
-link-docker-compose-file:
-	@test -f .git/info/exclude || (mkdir -p .git/info && touch .git/info/exclude)
-	@grep -qxF 'docker-compose.yml' .git/info/exclude || echo 'docker-compose.yml' >> .git/info/exclude
-	@test -f docker-compose.yml || ln -s docker-compose-local.yml docker-compose.yml
 
 up:
 	$(COMPOSE) up -d --build
@@ -52,14 +47,18 @@ db-setup:
 swagger-generate:
 	$(COMPOSE) exec app php artisan l5-swagger:generate
 
-db-setup-test:
-	$(COMPOSE) exec app php artisan migrate --env=testing
-
+# Тесты идут в отдельной БД `testing` (см. phpunit.xml), RefreshDatabase мигрирует её сам
 run-tests:
 	$(COMPOSE) exec app php artisan test
 
-start-frontend:
-	$(COMPOSE) --profile frontend up -d react
+lint:
+	$(COMPOSE) exec app vendor/bin/pint --test
+
+lint-fix:
+	$(COMPOSE) exec app vendor/bin/pint
+
+start-front:
+	$(COMPOSE) --profile front up -d front
 
 artisan:
 	$(COMPOSE) exec app php artisan $(filter-out $@,$(MAKECMDGOALS))
