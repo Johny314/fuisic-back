@@ -2,18 +2,23 @@
 
 ## Docker Compose
 
-Стек описан в `docker-compose-local.yml`:
+Стек описан в `docker-compose.yml`, имя проекта — `fuisic` (контейнеры `fuisic-app-1`, `fuisic-pgsql-1`, …). Конфиги сервисов лежат в `docker/<сервис>/`.
 
-| Контейнер | Назначение |
-|-----------|------------|
-| `app` | PHP 8.3-FPM |
-| `nginx` | Веб-сервер, порт `APP_PORT` (8080) |
-| `pgsql` | PostgreSQL 15 |
-| `redis` | Redis |
-| `rabbitmq` | RabbitMQ + management UI |
-| `queue` | Worker: `queue:work rabbitmq` |
+| Сервис | Образ | Назначение |
+|--------|-------|------------|
+| `app` | `fuisic-back:dev` (`docker/app/Dockerfile`, PHP 8.3-FPM) | Приложение |
+| `queue` | `fuisic-back:dev` | Worker: `queue:work rabbitmq` |
+| `nginx` | `nginx:1.30-alpine` | Веб-сервер, порт `APP_PORT` (8080) |
+| `pgsql` | `postgres:15` | БД `fuisic` + `testing` для тестов |
+| `redis` | `redis:8-alpine` | Кэш, порт `FORWARD_REDIS_PORT` (6380) |
+| `rabbitmq` | `rabbitmq:3-management-alpine` | Очереди + UI :15672 |
+| `mailpit` | `axllent/mailpit` | Письма, UI :8025 |
+| `minio` / `minio-init` | `pgsty/minio`, `pgsty/mc` | S3, бакет `fuisic` |
+| `front` | `fuisic-front:dev` | Expo, профиль `front`, порт 8081 |
 
-Симлинк `docker-compose.yml` → `docker-compose-local.yml` создаётся через `make link-docker-compose-file` и добавлен в `.git/info/exclude`.
+Официальные образы MinIO больше не публикуются, поэтому используется совместимый форк [pgsty/minio](https://hub.docker.com/r/pgsty/minio). Версии образов закреплены — обновляйте их осознанно.
+
+Пакет авторизации монтируется в контейнер как `../fuisic-auth → /var/www/fuisic-auth` (для composer path repository).
 
 ## Makefile
 
@@ -23,25 +28,26 @@
 | `make start` / `make stop` | Запуск / остановка |
 | `make composer-install` | Composer без Sail (через Docker-образ) |
 | `make db-setup` | `migrate --seed` |
-| `make run-tests` | PHPUnit |
+| `make run-tests` | PHPUnit в отдельной БД `testing` |
+| `make lint` / `make lint-fix` | Pint: проверка / автоформат |
 | `make artisan …` | Любая artisan-команда в контейнере |
-| `make start-frontend` | Профиль `frontend` (React, если есть `fuisic_front`) |
+| `make start-front` | Профиль `front` (Expo из `../fuisic-front`) |
 
 ## Пакет авторизации (локально)
 
-`composer.json` подключает `fuisic/laravel-auth` через path repository:
+`composer.json` подключает `fuisic/auth` через path repository:
 
 ```json
-"url": "../fuisic-laravel-auth"
+"url": "../fuisic-auth"
 ```
 
 Клонируйте репозиторий рядом:
 
 ```bash
 cd ..
-git clone git@github.com:FUISIC/fuisic-laravel-auth.git
-cd fuisic_back
-docker compose exec app composer update fuisic/laravel-auth
+git clone git@github.com:Johny314/fuisic-auth.git
+cd fuisic-back
+docker compose exec app composer update fuisic/auth
 ```
 
 Изменения в пакете подхватываются через symlink без переустановки.
@@ -85,8 +91,10 @@ docker compose exec app php artisan queue:work rabbitmq \
 ## Pint (форматирование)
 
 ```bash
-docker compose exec app ./vendor/bin/pint
+make lint-fix
 ```
+
+CI запускает `pint --test` — неотформатированный код не пройдёт проверку.
 
 ## Telescope
 

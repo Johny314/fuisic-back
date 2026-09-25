@@ -1,6 +1,6 @@
 FROM php:8.3-fpm
 
-COPY ./docker/php-fpm/php.ini $PHP_INI_DIR/php.ini
+COPY ./docker/app/php.ini $PHP_INI_DIR/php.ini
 
 RUN apt-get -y update \
     && apt-get install -y libfreetype6-dev libpq-dev libicu-dev libjpeg62-turbo-dev libpng-dev libxml2-dev libgmp-dev libzip-dev zip unzip curl git \
