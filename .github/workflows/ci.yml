@@ -126,6 +126,7 @@ jobs:
         working-directory: fuisic-back
         run: |
           cp .env.example .env
+          mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/app/public bootstrap/cache
           composer install --no-interaction --no-progress --prefer-dist
           php artisan key:generate
 
