@@ -10,6 +10,7 @@ use App\OpenApi\Parameter\ModelId;
 use App\OpenApi\Response\NotFound;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
 
 class Show extends Controller
@@ -25,6 +26,8 @@ class Show extends Controller
     #[Response(404, NotFound::class)]
     public function __invoke(Task $task): Data
     {
+        ContentAccess::abortUnlessCanViewTest($task->test);
+
         return Data::from($task);
     }
 }

@@ -16,7 +16,8 @@ return array_replace_recursive(
 
         'register' => [
             'validation' => [
-                'user_type' => ['sometimes', Rule::enum(UserType::class)],
+                // admin назначается только вручную — при регистрации доступны student/teacher
+                'user_type' => ['sometimes', Rule::in([UserType::student->value, UserType::teacher->value])],
             ],
             'fillable' => ['user_type'],
             'defaults' => [

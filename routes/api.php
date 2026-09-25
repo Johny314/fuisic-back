@@ -36,7 +36,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post(Uri::test->value, Test\Store::class);
     Route::put(Uri::test_id->value, Test\Update::class);
     Route::delete(Uri::test_id->value, Test\Destroy::class);
-    Route::post(Uri::check_answers->value, Test\CheckAnswers::class);
 
     Route::get(Uri::task->value, Task\Index::class);
 });
