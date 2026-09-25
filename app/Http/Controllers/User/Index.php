@@ -12,6 +12,7 @@ use App\OpenApi\Parameter\PerPage;
 use App\OpenApi\Parameter\Sort;
 use App\OpenApi\Response\IndexPaginatedResponse;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Spatie\LaravelData\PaginatedDataCollection;
@@ -32,6 +33,8 @@ class Index extends Controller
     #[IndexPaginatedResponse(User::class, description: 'Список пользователей')]
     public function __invoke(Request $request): PaginatedDataCollection
     {
+        ContentAccess::abortUnlessAdmin();
+
         $models = QueryBuilder::for(User::query())
             ->allowedSorts(['id', 'name'])
             ->allowedFilters(['name'])

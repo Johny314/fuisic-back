@@ -6,7 +6,6 @@ use App\Data\Test\Answers;
 use App\Data\Test\Result;
 use App\Data\Test\Results;
 use App\Enums\Uri;
-use App\Models\Test\Task;
 use App\Models\Test\Test;
 use App\OpenApi\Parameter\ModelId;
 use App\OpenApi\Post;
@@ -14,6 +13,7 @@ use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\NotFound;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
 
 class CheckAnswers extends Controller
@@ -30,6 +30,8 @@ class CheckAnswers extends Controller
     #[Response(404, NotFound::class)]
     public function __invoke(Test $test, Answers $answers): Results
     {
+        ContentAccess::abortUnlessCanViewTest($test);
+
         $tasks = $test->tasks()->get()->keyBy('id');
 
         $results = [];
@@ -39,7 +41,7 @@ class CheckAnswers extends Controller
             $isCorrect = $task && $task->answer === $answer['answer'];
 
             $results[] = Result::from([
-                'task' => Task::query()->find($answer['task_id']),
+                'task' => $task,
                 'answer' => $answer['answer'],
                 'correct_answer' => $task?->answer,
                 'is_correct' => $isCorrect,

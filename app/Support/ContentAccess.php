@@ -32,6 +32,14 @@ final class ContentAccess
         return $user?->user_type === UserType::admin;
     }
 
+    public static function abortUnlessAdmin(): User
+    {
+        $user = self::requireUser();
+        abort_unless(self::isAdmin($user), 403, 'Недостаточно прав');
+
+        return $user;
+    }
+
     public static function abortUnlessCanManageUser(User $target): User
     {
         $user = self::requireUser();
@@ -108,6 +116,26 @@ final class ContentAccess
     public static function abortUnlessCanViewTest(Test $test): void
     {
         abort_unless(self::canViewTest($test), 403, 'Тест недоступен');
+    }
+
+    /**
+     * Контент, который видит текущий пользователь: каталог админов, свой контент; админ — всё.
+     */
+    public static function applyVisibleScope(Builder $query, string $ownerColumn = 'user_id'): void
+    {
+        $user = self::user();
+
+        if (self::isAdmin($user)) {
+            return;
+        }
+
+        $query->where(function (Builder $visible) use ($user, $ownerColumn) {
+            $visible->whereHas('user', fn (Builder $owner) => $owner->where('user_type', UserType::admin));
+
+            if ($user) {
+                $visible->orWhere($ownerColumn, $user->id);
+            }
+        });
     }
 
     public static function applyIndexScope(Builder $query, mixed $scope, string $ownerColumn = 'user_id'): void

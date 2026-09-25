@@ -10,6 +10,7 @@ use App\OpenApi\Put;
 use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
+use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
 
 class Update extends Controller
@@ -25,6 +26,8 @@ class Update extends Controller
     #[Response(200, Data::class)]
     public function __invoke(Section $section, Data $data): Data
     {
+        ContentAccess::abortUnlessAdmin();
+
         $section->update($data->toArray());
 
         return Data::from($section);
