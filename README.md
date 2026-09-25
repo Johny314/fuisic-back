@@ -2,13 +2,13 @@
 
 [![CI](https://github.com/Johny314/fuisic-back/actions/workflows/ci.yml/badge.svg)](https://github.com/Johny314/fuisic-back/actions/workflows/ci.yml)
 
-API-бэкенд платформы FUISIC на Laravel 11: карточки, тесты, задания и авторизация через пакет [fuisic/auth](https://github.com/Johny314/fuisic-auth).
+API-бэкенд платформы FUISIC на Laravel 13: карточки, тесты, задания и авторизация через пакет [fuisic/auth](https://github.com/Johny314/fuisic-auth).
 
 **Версия:** `v2.3.0`
 
 ## Стек
 
-- PHP 8.4, Laravel 11
+- PHP 8.4, Laravel 13, Backpack 7
 - PostgreSQL 15, Redis
 - RabbitMQ (очереди авторизации)
 - Docker Compose (nginx + php-fpm)

@@ -26,13 +26,13 @@ class TestHistory extends Data
     #[Property(example: 120)]
     public ?int $completion_time;
 
-    #[Property(schema: Test::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?Test $test;
 
-    #[Property(schema: User::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?User $user;
 
-    #[Property(schema: TaskHistory::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?TaskHistory $answers;
 
     public static function fromModel(Model $model): TestHistory

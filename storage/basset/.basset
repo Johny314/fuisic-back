@@ -1,0 +1,314 @@
+{
+    "https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css",
+        "asset_path": "https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css",
+        "asset_attributes": {
+            "integrity": "sha256-fvdQvRBUamldCxJ2etgEi9jz7F3n2u+xBn+dDao9HJo=",
+            "crossorigin": "anonymous"
+        }
+    },
+    "/var/www/html/vendor/backpack/theme-tabler/resources/assets/css/style.css": {
+        "asset_name": "/var/www/html/vendor/backpack/theme-tabler/resources/assets/css/style.css",
+        "asset_path": "/var/www/html/vendor/backpack/theme-tabler/resources/assets/css/style.css",
+        "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/style.css",
+        "asset_attributes": []
+    },
+    "/var/www/html/vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css": {
+        "asset_name": "/var/www/html/vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
+        "asset_path": "/var/www/html/vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
+        "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/css/color-adjustments.css",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.compat.css": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.compat.css",
+        "asset_path": "https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.compat.css",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.compat.css",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.css": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.css",
+        "asset_path": "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.css",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.css",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.woff2": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.woff2",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.woff2",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.woff2",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.woff2": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.woff2",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.woff2",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.woff2",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.woff2": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.woff2",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.woff2",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.woff2",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.woff": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.woff",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.woff",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.woff",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.woff": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.woff",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.woff",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.woff",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.woff": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.woff",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.woff",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.woff",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.ttf": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.ttf",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.ttf",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-regular-400.ttf",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.ttf": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.ttf",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.ttf",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-solid-900.ttf",
+        "asset_attributes": []
+    },
+    "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.ttf": {
+        "asset_name": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.ttf",
+        "asset_path": "https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.ttf",
+        "asset_disk_path": "basset/cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/fonts/la-brands-400.ttf",
+        "asset_attributes": []
+    },
+    "/var/www/html/vendor/backpack/crud/src/resources/assets/css/common.css": {
+        "asset_name": "/var/www/html/vendor/backpack/crud/src/resources/assets/css/common.css",
+        "asset_path": "/var/www/html/vendor/backpack/crud/src/resources/assets/css/common.css",
+        "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/css/common.css",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/559806fea4cf289cfe1596ab2bd532507a9200817fff87cd3b2ec2248b163296.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/559806fea4cf289cfe1596ab2bd532507a9200817fff87cd3b2ec2248b163296.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/559806fea4cf289cfe1596ab2bd532507a9200817fff87cd3b2ec2248b163296.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/559806fea4cf289cfe1596ab2bd532507a9200817fff87cd3b2ec2248b163296.jpg",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js",
+        "asset_attributes": []
+    },
+    "/var/www/html/vendor/backpack/crud/src/resources/assets/js/common.js": {
+        "asset_name": "/var/www/html/vendor/backpack/crud/src/resources/assets/js/common.js",
+        "asset_path": "/var/www/html/vendor/backpack/crud/src/resources/assets/js/common.js",
+        "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/js/common.js",
+        "asset_attributes": []
+    },
+    "https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/js/tabler.min.js": {
+        "asset_name": "https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/js/tabler.min.js",
+        "asset_path": "https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/js/tabler.min.js",
+        "asset_disk_path": "basset/cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/js/tabler.min.js",
+        "asset_attributes": {
+            "integrity": "sha256-tgx2Fg6XYkV027jPEKvmrummSTtgCW/fwV3R3SvZnrk=",
+            "crossorigin": "anonymous"
+        }
+    },
+    "/var/www/html/vendor/backpack/theme-tabler/resources/assets/js/tabler.js": {
+        "asset_name": "/var/www/html/vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
+        "asset_path": "/var/www/html/vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
+        "asset_disk_path": "basset/vendor/backpack/theme-tabler/resources/assets/js/tabler.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/2.1.8/js/dataTables.min.js": {
+        "asset_name": "https://cdn.datatables.net/2.1.8/js/dataTables.min.js",
+        "asset_path": "https://cdn.datatables.net/2.1.8/js/dataTables.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/2.1.8/js/dataTables.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js": {
+        "asset_name": "https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js",
+        "asset_path": "https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js": {
+        "asset_name": "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
+        "asset_path": "https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js": {
+        "asset_name": "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
+        "asset_path": "https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
+        "asset_disk_path": "basset/cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js",
+        "asset_attributes": []
+    },
+    "/var/www/html/vendor/backpack/crud/src/resources/assets/img/spinner.svg": {
+        "asset_name": "/var/www/html/vendor/backpack/crud/src/resources/assets/img/spinner.svg",
+        "asset_path": "/var/www/html/vendor/backpack/crud/src/resources/assets/img/spinner.svg",
+        "asset_disk_path": "basset/vendor/backpack/crud/src/resources/assets/img/spinner.svg",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css": {
+        "asset_name": "https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css",
+        "asset_path": "https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css",
+        "asset_disk_path": "basset/cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css": {
+        "asset_name": "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
+        "asset_path": "https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
+        "asset_disk_path": "basset/cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.min.css",
+        "asset_attributes": []
+    },
+    "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css": {
+        "asset_name": "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
+        "asset_path": "https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
+        "asset_disk_path": "basset/cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.min.css",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/8a91182a7b5d0b70e3c627171b3ac4de0eb36d62c6cde85bfcbba56e67c12d84.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/8a91182a7b5d0b70e3c627171b3ac4de0eb36d62c6cde85bfcbba56e67c12d84.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/8a91182a7b5d0b70e3c627171b3ac4de0eb36d62c6cde85bfcbba56e67c12d84.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/8a91182a7b5d0b70e3c627171b3ac4de0eb36d62c6cde85bfcbba56e67c12d84.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/92297af9040df4da096c79c28652ff85ee4ee4f1f647b82e4e50155b38bf0550.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/92297af9040df4da096c79c28652ff85ee4ee4f1f647b82e4e50155b38bf0550.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/92297af9040df4da096c79c28652ff85ee4ee4f1f647b82e4e50155b38bf0550.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/92297af9040df4da096c79c28652ff85ee4ee4f1f647b82e4e50155b38bf0550.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/9fad215fbb7203b02d10b95c2bd7ecb2188f3bc87ec7171351d5929f54a16626.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/9fad215fbb7203b02d10b95c2bd7ecb2188f3bc87ec7171351d5929f54a16626.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/9fad215fbb7203b02d10b95c2bd7ecb2188f3bc87ec7171351d5929f54a16626.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/9fad215fbb7203b02d10b95c2bd7ecb2188f3bc87ec7171351d5929f54a16626.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/8442f09a9944a161a55a1d4246ebf234a00c7501832afbd51e54efad110d9577.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/8442f09a9944a161a55a1d4246ebf234a00c7501832afbd51e54efad110d9577.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/8442f09a9944a161a55a1d4246ebf234a00c7501832afbd51e54efad110d9577.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/8442f09a9944a161a55a1d4246ebf234a00c7501832afbd51e54efad110d9577.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/3a1d35dd8f8113a791ec30bd202a39b7680925551820b73816201a17f444c2b5.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/3a1d35dd8f8113a791ec30bd202a39b7680925551820b73816201a17f444c2b5.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/3a1d35dd8f8113a791ec30bd202a39b7680925551820b73816201a17f444c2b5.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/3a1d35dd8f8113a791ec30bd202a39b7680925551820b73816201a17f444c2b5.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/509e9c1f60eedf9ef86d8d98c73a24f04f5dc49acce94299968a86056d7d69bb.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/509e9c1f60eedf9ef86d8d98c73a24f04f5dc49acce94299968a86056d7d69bb.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/509e9c1f60eedf9ef86d8d98c73a24f04f5dc49acce94299968a86056d7d69bb.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/509e9c1f60eedf9ef86d8d98c73a24f04f5dc49acce94299968a86056d7d69bb.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/8ddbd1b119709cb0f2fd50c05f386a5c930c1deb2cb8d23ed34c958725ff631a.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/8ddbd1b119709cb0f2fd50c05f386a5c930c1deb2cb8d23ed34c958725ff631a.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/8ddbd1b119709cb0f2fd50c05f386a5c930c1deb2cb8d23ed34c958725ff631a.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/8ddbd1b119709cb0f2fd50c05f386a5c930c1deb2cb8d23ed34c958725ff631a.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/3f08ca82421909a74fd028bc24d21cd5e675e0b9fb9738c1d0625176a3a1399b.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/3f08ca82421909a74fd028bc24d21cd5e675e0b9fb9738c1d0625176a3a1399b.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/3f08ca82421909a74fd028bc24d21cd5e675e0b9fb9738c1d0625176a3a1399b.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/3f08ca82421909a74fd028bc24d21cd5e675e0b9fb9738c1d0625176a3a1399b.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/b9e4d89dcd835dbcada0ac2216cebc87151401f39b2c934988143c69c7f19917.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/b9e4d89dcd835dbcada0ac2216cebc87151401f39b2c934988143c69c7f19917.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/b9e4d89dcd835dbcada0ac2216cebc87151401f39b2c934988143c69c7f19917.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/b9e4d89dcd835dbcada0ac2216cebc87151401f39b2c934988143c69c7f19917.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/51aaf8573a41cf3d2a9d9598150f74dc5b4c5eebfd6f67ad6df51d3ccecebbb1.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/51aaf8573a41cf3d2a9d9598150f74dc5b4c5eebfd6f67ad6df51d3ccecebbb1.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/51aaf8573a41cf3d2a9d9598150f74dc5b4c5eebfd6f67ad6df51d3ccecebbb1.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/51aaf8573a41cf3d2a9d9598150f74dc5b4c5eebfd6f67ad6df51d3ccecebbb1.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/d91e8f1ff7247800e53a771f13f2fd7baba7d45a5c1455d4d16b9e8bb564e815.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/d91e8f1ff7247800e53a771f13f2fd7baba7d45a5c1455d4d16b9e8bb564e815.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/d91e8f1ff7247800e53a771f13f2fd7baba7d45a5c1455d4d16b9e8bb564e815.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/d91e8f1ff7247800e53a771f13f2fd7baba7d45a5c1455d4d16b9e8bb564e815.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/c162e6d7c500d1b6e78f5f6f7501db79318a3c1ef9ebaa629e00fd629d921fec.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/c162e6d7c500d1b6e78f5f6f7501db79318a3c1ef9ebaa629e00fd629d921fec.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/c162e6d7c500d1b6e78f5f6f7501db79318a3c1ef9ebaa629e00fd629d921fec.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/c162e6d7c500d1b6e78f5f6f7501db79318a3c1ef9ebaa629e00fd629d921fec.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/f19eec39ecfe2b6309d386f57449a0d9be89573687894ff8cb5303daff589e98.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/f19eec39ecfe2b6309d386f57449a0d9be89573687894ff8cb5303daff589e98.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/f19eec39ecfe2b6309d386f57449a0d9be89573687894ff8cb5303daff589e98.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/f19eec39ecfe2b6309d386f57449a0d9be89573687894ff8cb5303daff589e98.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/77e01d09f6eba09e0a34930904f94bafffbe1fce0b83c14d4a3bdb343492eba2.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/77e01d09f6eba09e0a34930904f94bafffbe1fce0b83c14d4a3bdb343492eba2.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/77e01d09f6eba09e0a34930904f94bafffbe1fce0b83c14d4a3bdb343492eba2.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/77e01d09f6eba09e0a34930904f94bafffbe1fce0b83c14d4a3bdb343492eba2.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/36c76a527c866ddefb48f4df6424734ee0ae754243511b8aea36982ae5579081.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/36c76a527c866ddefb48f4df6424734ee0ae754243511b8aea36982ae5579081.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/36c76a527c866ddefb48f4df6424734ee0ae754243511b8aea36982ae5579081.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/36c76a527c866ddefb48f4df6424734ee0ae754243511b8aea36982ae5579081.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/33a523644b2d45c15fd2452845140eaa154b0428cc211125d53f75979ead957f.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/33a523644b2d45c15fd2452845140eaa154b0428cc211125d53f75979ead957f.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/33a523644b2d45c15fd2452845140eaa154b0428cc211125d53f75979ead957f.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/33a523644b2d45c15fd2452845140eaa154b0428cc211125d53f75979ead957f.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/9aed3c68f71c96390153bf023b2a65620ee1553f72503683394c94fe0825369a.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/9aed3c68f71c96390153bf023b2a65620ee1553f72503683394c94fe0825369a.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/9aed3c68f71c96390153bf023b2a65620ee1553f72503683394c94fe0825369a.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/9aed3c68f71c96390153bf023b2a65620ee1553f72503683394c94fe0825369a.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/eeb2062bba31cbea8380e77ec3cd893f65c54ce0b17fe6ef5daa516a32691df2.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/eeb2062bba31cbea8380e77ec3cd893f65c54ce0b17fe6ef5daa516a32691df2.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/eeb2062bba31cbea8380e77ec3cd893f65c54ce0b17fe6ef5daa516a32691df2.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/eeb2062bba31cbea8380e77ec3cd893f65c54ce0b17fe6ef5daa516a32691df2.jpg",
+        "asset_attributes": []
+    },
+    "https://www.gravatar.com/avatar/ef2268b392c88643d2ad1d606bbbe0647e1f3b22398acb903aacf86486d5fd18.jpg?s=80&d=blank&r=g": {
+        "asset_name": "https://www.gravatar.com/avatar/ef2268b392c88643d2ad1d606bbbe0647e1f3b22398acb903aacf86486d5fd18.jpg?s=80&d=blank&r=g",
+        "asset_path": "https://www.gravatar.com/avatar/ef2268b392c88643d2ad1d606bbbe0647e1f3b22398acb903aacf86486d5fd18.jpg?s=80&d=blank&r=g",
+        "asset_disk_path": "basset/www.gravatar.com/avatar/ef2268b392c88643d2ad1d606bbbe0647e1f3b22398acb903aacf86486d5fd18.jpg",
+        "asset_attributes": []
+    }
+}

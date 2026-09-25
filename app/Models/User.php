@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\UserType;
+use App\Services\MediaStorage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Fuisic\Auth\Traits\HasFuisicAuth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -10,10 +11,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laragear\WebAuthn\Contracts\WebAuthnAuthenticatable;
+use Laravel\Passkeys\Contracts\PasskeyUser;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail, WebAuthnAuthenticatable
+class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     use CrudTrait;
     use HasApiTokens;
@@ -50,6 +51,6 @@ class User extends Authenticatable implements MustVerifyEmail, WebAuthnAuthentic
 
     public function getAvatarUrlAttribute(): ?string
     {
-        return app(\App\Services\MediaStorage::class)->url($this->avatar_path);
+        return app(MediaStorage::class)->url($this->avatar_path);
     }
 }

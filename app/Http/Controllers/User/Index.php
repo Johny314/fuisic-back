@@ -36,8 +36,8 @@ class Index extends Controller
         ContentAccess::abortUnlessAdmin();
 
         $models = QueryBuilder::for(User::query())
-            ->allowedSorts(['id', 'name'])
-            ->allowedFilters(['name'])
+            ->allowedSorts(...['id', 'name'])
+            ->allowedFilters(...['name'])
             ->orderByDesc('created_at')
             ->paginate(
                 perPage: $request->per_page,

@@ -19,7 +19,7 @@ class TaskHistory extends Data
     #[Property(example: 'Answer to task history')]
     public ?string $answer;
 
-    #[Property(schema: TestHistory::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?TestHistory $testHistory;
 
     public static function fromModel(Model $model): TaskHistory

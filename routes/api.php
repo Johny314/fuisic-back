@@ -3,6 +3,7 @@
 use App\Enums\Uri;
 use App\Http\Controllers\Card;
 use App\Http\Controllers\CardSet;
+use App\Http\Controllers\File\Store;
 use App\Http\Controllers\Filters;
 use App\Http\Controllers\Section;
 use App\Http\Controllers\Task;
@@ -11,7 +12,7 @@ use App\Http\Controllers\User;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post(Uri::files->value, \App\Http\Controllers\File\Store::class);
+    Route::post(Uri::files->value, Store::class);
 
     Route::post(Uri::card_set->value, CardSet\Store::class);
     Route::put(Uri::card_set_id->value, CardSet\Update::class);

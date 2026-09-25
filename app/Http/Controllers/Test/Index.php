@@ -44,8 +44,8 @@ class Index extends Controller
         ContentAccess::applyIndexScope($query, $request->input('filter.scope'));
 
         $models = QueryBuilder::for($query)
-            ->allowedSorts(['id', 'creator_id', 'name'])
-            ->allowedFilters([
+            ->allowedSorts(...['id', 'creator_id', 'name'])
+            ->allowedFilters(...[
                 'creator_id',
                 'name',
                 AllowedFilter::exact('section_id'),

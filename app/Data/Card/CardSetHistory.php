@@ -24,10 +24,10 @@ class CardSetHistory extends Data
     #[Property(minimum: 0, example: 300)]
     public int $completion_time;
 
-    #[Property(schema: CardSet::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?CardSet $cardSet;
 
-    #[Property(schema: User::class, readOnly: true)]
+    #[Property(readOnly: true)]
     public ?User $user;
 
     public static function fromRequest(Request $request): CardSetHistory
