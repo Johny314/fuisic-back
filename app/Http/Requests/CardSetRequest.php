@@ -19,8 +19,6 @@ class CardSetRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -31,8 +29,6 @@ class CardSetRequest extends FormRequest
 
     /**
      * Get the validation attributes that apply to the request.
-     *
-     * @return array
      */
     public function attributes(): array
     {
@@ -43,8 +39,6 @@ class CardSetRequest extends FormRequest
 
     /**
      * Get the validation messages that apply to the request.
-     *
-     * @return array
      */
     public function messages(): array
     {

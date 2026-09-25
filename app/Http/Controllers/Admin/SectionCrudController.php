@@ -15,16 +15,16 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
  * Class SectionCrudController
- * @package App\Http\Controllers\Admin
+ *
  * @property-read CrudPanel $crud
  */
 class SectionCrudController extends CrudController
 {
-    use ListOperation;
     use CreateOperation;
-    use UpdateOperation;
     use DeleteOperation;
+    use ListOperation;
     use ShowOperation;
+    use UpdateOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -34,7 +34,7 @@ class SectionCrudController extends CrudController
     public function setup()
     {
         CRUD::setModel(Section::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/section');
+        CRUD::setRoute(config('backpack.base.route_prefix').'/section');
         CRUD::setEntityNameStrings('Раздел', 'Разделы');
     }
 
@@ -42,6 +42,7 @@ class SectionCrudController extends CrudController
      * Define what happens when the List operation is loaded.
      *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     *
      * @return void
      */
     protected function setupListOperation()
@@ -57,6 +58,7 @@ class SectionCrudController extends CrudController
      * Define what happens when the Create operation is loaded.
      *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
+     *
      * @return void
      */
     protected function setupCreateOperation()
@@ -74,6 +76,7 @@ class SectionCrudController extends CrudController
      * Define what happens when the Update operation is loaded.
      *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
+     *
      * @return void
      */
     protected function setupUpdateOperation()

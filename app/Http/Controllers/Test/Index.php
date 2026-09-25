@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Test;
 
 use App\Data\Test\Test as Data;
-use App\Models\Test\Test as TestModel;
 use App\Enums\Uri;
+use App\Models\Test\Test as TestModel;
 use App\OpenApi\Get;
 use App\OpenApi\Parameter\Filter;
 use App\OpenApi\Parameter\Page;

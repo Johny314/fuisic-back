@@ -46,8 +46,8 @@ class Test extends Data
     public static function fromRequest(Request $request): Test
     {
         return static::from([
-                'user_id' => auth()->user()->id,
-            ] + $request->toArray()
+            'user_id' => auth()->user()->id,
+        ] + $request->toArray()
         );
     }
 
@@ -56,9 +56,9 @@ class Test extends Data
         $model->loadMissing(['section', 'user']);
 
         return static::from([
-                'section' => $model->section ? Section::from($model->section) : null,
-                'user' => $model->user ? User::from($model->user) : null,
-            ] + $model->toArray());
+            'section' => $model->section ? Section::from($model->section) : null,
+            'user' => $model->user ? User::from($model->user) : null,
+        ] + $model->toArray());
     }
 
     public function persistAttributes(?int $userId = null): array

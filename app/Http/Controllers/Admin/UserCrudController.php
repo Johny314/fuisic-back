@@ -15,20 +15,19 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
  * Class UserCrudController
- * @package App\Http\Controllers\Admin
  */
 class UserCrudController extends CrudController
 {
-    use ListOperation;
     use CreateOperation;
-    use UpdateOperation;
     use DeleteOperation;
+    use ListOperation;
     use ShowOperation;
+    use UpdateOperation;
 
     public function setup()
     {
         CRUD::setModel(User::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
+        CRUD::setRoute(config('backpack.base.route_prefix').'/user');
         CRUD::setEntityNameStrings('Пользователь', 'Пользователи');
     }
 
@@ -59,7 +58,7 @@ class UserCrudController extends CrudController
             'name' => 'user_type',
             'label' => 'Тип пользователя',
             'type' => 'select_from_array',
-            'options' => collect(UserType::cases())->mapWithKeys(fn($case) => [$case->value => $case->name])->toArray(),
+            'options' => collect(UserType::cases())->mapWithKeys(fn ($case) => [$case->value => $case->name])->toArray(),
             'allows_null' => false,
             'default' => UserType::student->value,
         ]);

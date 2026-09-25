@@ -27,4 +27,3 @@ Route::group([
 /**
  * DO NOT ADD ANYTHING HERE.
  */
-

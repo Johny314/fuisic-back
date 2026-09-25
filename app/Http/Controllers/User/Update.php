@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Data\User\UserUpdate as Data;
 use App\Data\User\User as UserData;
+use App\Data\User\UserUpdate as Data;
 use App\Enums\Uri;
 use App\Models\User;
 use App\OpenApi\Parameter\ModelId;

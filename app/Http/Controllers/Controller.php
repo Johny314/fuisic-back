@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\OpenApi\Tag;
 use App\OpenApi\TagAttr;
 use OpenApi\Attributes as OA;
+
 #[OA\Info(
     version: '0.1',
     description: 'Данный проект находится в разработке',

@@ -26,19 +26,14 @@ class CheckIfAdmin
      * when trying to access an admin route. By default it's '/home' but Backpack
      * does not have a '/home' route, use something you've built for your users
      * (again - users, not admins).
-     *
-     * @param $user
-     * @return bool
      */
     private function checkIfUserIsAdmin($user): bool
     {
         return $user->user_type->value === UserType::admin->value;
     }
+
     /**
      * Answer to unauthorized access request.
-     *
-     * @param Request $request
-     * @return Response|RedirectResponse
      */
     private function respondToUnauthorizedRequest(Request $request): Response|RedirectResponse
     {
@@ -51,10 +46,6 @@ class CheckIfAdmin
 
     /**
      * Handle an incoming request.
-     *
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
      */
     public function handle(Request $request, Closure $next): mixed
     {

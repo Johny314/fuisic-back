@@ -41,8 +41,8 @@ class User extends Data
     public static function fromRequest(Request $request): User
     {
         return static::from([
-                'user_type' => UserType::student->value,
-            ] + $request->toArray()
+            'user_type' => UserType::student->value,
+        ] + $request->toArray()
         );
     }
 }
