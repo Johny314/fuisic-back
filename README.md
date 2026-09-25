@@ -1,5 +1,7 @@
 # FUISIC Backend
 
+[![CI](https://github.com/Johny314/fuisic-back/actions/workflows/ci.yml/badge.svg)](https://github.com/Johny314/fuisic-back/actions/workflows/ci.yml)
+
 API-бэкенд платформы FUISIC на Laravel 11: карточки, тесты, задания и авторизация через пакет [fuisic/auth](https://github.com/Johny314/fuisic-auth).
 
 **Версия:** `v2.2.0`
