@@ -6,12 +6,12 @@
 
 | Сервис | Образ | Назначение |
 |--------|-------|------------|
-| `app` | `fuisic-back:dev` (`docker/app/Dockerfile`, PHP 8.3-FPM) | Приложение |
+| `app` | `fuisic-back:dev` (`docker/app/Dockerfile`, PHP 8.4-FPM) | Приложение |
 | `queue` | `fuisic-back:dev` | Worker: `queue:work rabbitmq` |
 | `nginx` | `nginx:1.30-alpine` | Веб-сервер, порт `APP_PORT` (8080) |
-| `pgsql` | `postgres:15` | БД `fuisic` + `testing` для тестов |
+| `pgsql` | `postgres:18` | БД `fuisic` + `testing` для тестов |
 | `redis` | `redis:8-alpine` | Кэш, порт `FORWARD_REDIS_PORT` (6380) |
-| `rabbitmq` | `rabbitmq:3-management-alpine` | Очереди + UI :15672 |
+| `rabbitmq` | `rabbitmq:4-management-alpine` | Очереди + UI :15672 |
 | `mailpit` | `axllent/mailpit` | Письма, UI :8025 |
 | `minio` / `minio-init` | `pgsty/minio`, `pgsty/mc` | S3, бакет `fuisic` |
 | `front` | `fuisic-front:dev` | Expo, профиль `front`, порт 8081 |

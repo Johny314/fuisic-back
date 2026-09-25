@@ -66,7 +66,7 @@ services:
             - nginx
 
     pgsql:
-        image: postgres:15
+        image: postgres:18
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
@@ -75,7 +75,8 @@ services:
             POSTGRES_USER: '${DB_USERNAME}'
             POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
         volumes:
-            - pgsql_data:/var/lib/postgresql/data
+            # образ PG 18+ хранит данные в /var/lib/postgresql/<версия>/docker
+            - pgsql_data:/var/lib/postgresql
             - './docker/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql:ro'
         networks:
             - fuisic
@@ -98,7 +99,7 @@ services:
             timeout: 5s
 
     rabbitmq:
-        image: rabbitmq:3-management-alpine
+        image: rabbitmq:4-management-alpine
         ports:
             - '${FORWARD_RABBITMQ_PORT:-5672}:5672'
             - '${FORWARD_RABBITMQ_DASHBOARD_PORT:-15672}:15672'
