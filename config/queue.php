@@ -1,5 +1,7 @@
 <?php
 
+use PhpAmqpLib\Connection\AMQPLazyConnection;
+
 return [
 
     /*
@@ -75,7 +77,7 @@ return [
         'rabbitmq' => [
             'driver' => 'rabbitmq',
             'queue' => env('RABBITMQ_QUEUE', 'default'),
-            'connection' => PhpAmqpLib\Connection\AMQPLazyConnection::class,
+            'connection' => AMQPLazyConnection::class,
             'hosts' => [
                 [
                     'host' => env('RABBITMQ_HOST', 'rabbitmq'),

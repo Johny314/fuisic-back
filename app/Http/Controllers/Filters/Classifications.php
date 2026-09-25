@@ -24,7 +24,7 @@ class Classifications extends Controller
     public function __invoke(): Collection
     {
         return Data::collect(
-            collect(Filter::cases())->map(fn (Filter $case) => ['name' => $case->value])
+            collect(filter::cases())->map(fn (filter $case) => ['name' => $case->value])
         );
     }
 }

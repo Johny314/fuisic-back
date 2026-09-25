@@ -2,11 +2,10 @@
 
 namespace App\OpenApi\Response;
 
-use OpenApi\Attributes as OA;
 use OpenApi\Attributes\Schema;
 
 #[Schema]
-class Ok extends OA\Schema
+class Ok extends Schema
 {
     public function __construct()
     {
