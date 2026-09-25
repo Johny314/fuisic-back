@@ -64,15 +64,9 @@ storage/app/public
 bootstrap/cache
 ```
 
-## Миграции WebAuthn
+## Passkeys
 
-После установки пакета auth:
-
-```bash
-docker compose exec app php artisan vendor:publish \
-  --provider="Laragear\WebAuthn\WebAuthnServiceProvider" --tag="migrations"
-docker compose exec app php artisan migrate
-```
+Таблица `passkeys` (laravel/passkeys) уже опубликована в `database/migrations`. Старые ключи `webauthn_credentials` (laragear) не переносятся — миграция удаляет таблицу, passkey регистрируется заново.
 
 ## Очереди
 
@@ -104,9 +98,7 @@ CI запускает `pint --test` — неотформатированный �
 
 ### 502 Bad Gateway
 
-```bash
-docker compose restart app nginx
-```
+nginx переразрешает `app` через DNS Docker, поэтому перезапуск `app` больше не даёт 502. Если всё же 502 — контейнер `app` не запущен: `docker compose ps`, `docker compose logs app`.
 
 ### Composer / Redis при install
 
