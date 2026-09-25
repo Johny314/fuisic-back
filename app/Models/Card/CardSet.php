@@ -4,6 +4,7 @@ namespace App\Models\Card;
 
 use App\Models\Section;
 use App\Models\User;
+use App\Services\MediaStorage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Database\Factories\CardSetFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -57,6 +58,6 @@ class CardSet extends Model
 
     public function getLogoUrlAttribute(): ?string
     {
-        return app(\App\Services\MediaStorage::class)->url($this->logo_path);
+        return app(MediaStorage::class)->url($this->logo_path);
     }
 }
