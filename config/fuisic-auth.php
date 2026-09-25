@@ -3,10 +3,10 @@
 use App\Enums\UserType;
 use Illuminate\Validation\Rule;
 
-$packageConfig = dirname(__DIR__).'/vendor/fuisic/laravel-auth/config/fuisic-auth.php';
+$packageConfig = dirname(__DIR__).'/vendor/fuisic/auth/config/fuisic-auth.php';
 
 if (! file_exists($packageConfig)) {
-    $packageConfig = dirname(__DIR__).'/../fuisic-laravel-auth/config/fuisic-auth.php';
+    $packageConfig = dirname(__DIR__).'/../fuisic-auth/config/fuisic-auth.php';
 }
 
 return array_replace_recursive(

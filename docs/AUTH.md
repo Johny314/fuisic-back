@@ -1,6 +1,6 @@
-# Авторизация (fuisic/laravel-auth)
+# Авторизация (fuisic/auth)
 
-Backend использует отдельный пакет **[fuisic/laravel-auth](https://github.com/Johny314/fuisic-laravel-auth)** для всей auth-логики.
+Backend использует отдельный пакет **[fuisic/auth](https://github.com/Johny314/fuisic-auth)** для всей auth-логики.
 
 ## Подключение
 
@@ -9,12 +9,12 @@ Backend использует отдельный пакет **[fuisic/laravel-aut
 "repositories": [
     {
         "type": "path",
-        "url": "../fuisic-laravel-auth",
+        "url": "../fuisic-auth",
         "options": { "symlink": true }
     }
 ],
 "require": {
-    "fuisic/laravel-auth": "@dev"
+    "fuisic/auth": "@dev"
 }
 ```
 
@@ -58,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Публичные auth-эндпоинты пакета: `/register`, `/login`, `/password/*`, `/oauth/*`, `/passkeys/*`.
 
-Полный список: [fuisic-laravel-auth/docs/API.md](https://github.com/Johny314/fuisic-laravel-auth/blob/main/docs/API.md)
+Полный список: [fuisic-auth/docs/API.md](https://github.com/Johny314/fuisic-auth/blob/main/docs/API.md)
 
 ## RabbitMQ
 

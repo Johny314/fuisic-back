@@ -1,6 +1,6 @@
 # FUISIC Backend
 
-API-бэкенд платформы FUISIC на Laravel 11: карточки, тесты, задания и авторизация через пакет [fuisic/laravel-auth](https://github.com/Johny314/fuisic-laravel-auth).
+API-бэкенд платформы FUISIC на Laravel 11: карточки, тесты, задания и авторизация через пакет [fuisic/auth](https://github.com/Johny314/fuisic-auth).
 
 **Версия:** `v2.2.0`
 
@@ -18,12 +18,12 @@ API-бэкенд платформы FUISIC на Laravel 11: карточки, т
 ### Требования
 
 - Docker Desktop
-- Репозиторий `fuisic-laravel-auth` рядом с проектом (для локальной разработки):
+- Репозиторий `fuisic-auth` рядом с проектом (для локальной разработки):
 
 ```
 FUISIC/
-├── fuisic_back/          ← этот репозиторий
-└── fuisic-laravel-auth/  ← пакет авторизации
+├── fuisic-back/          ← этот репозиторий
+└── fuisic-auth/  ← пакет авторизации
 ```
 
 ### Первый запуск
@@ -91,10 +91,10 @@ make artisan queue:work rabbitmq --queue=auth.notifications,default
 | Файл | Описание |
 |------|----------|
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Локальная разработка, Docker, Makefile |
-| [docs/AUTH.md](docs/AUTH.md) | Интеграция fuisic/laravel-auth |
+| [docs/AUTH.md](docs/AUTH.md) | Интеграция fuisic/auth |
 | [docs/API.md](docs/API.md) | Доменное API (карточки, тесты) |
 
-Документация пакета авторизации — в репозитории [fuisic-laravel-auth](https://github.com/Johny314/fuisic-laravel-auth).
+Документация пакета авторизации — в репозитории [fuisic-auth](https://github.com/Johny314/fuisic-auth).
 
 ## Структура проекта
 
@@ -110,13 +110,13 @@ routes/api.php      # доменные маршруты (auth — в пакет�
 
 ## Авторизация
 
-Auth-эндпоинты предоставляет пакет `fuisic/laravel-auth`:
+Auth-эндпоинты предоставляет пакет `fuisic/auth`:
 
 - `POST /register`, `POST /login`, `POST /logout`, `GET /me`
 - Email verification, password reset
 - OAuth VK / Yandex, passkeys
 
-См. [docs/AUTH.md](docs/AUTH.md) и [fuisic-laravel-auth/docs/API.md](../fuisic-laravel-auth/docs/API.md).
+См. [docs/AUTH.md](docs/AUTH.md) и [fuisic-auth/docs/API.md](../fuisic-auth/docs/API.md).
 
 ## Переменные окружения
 

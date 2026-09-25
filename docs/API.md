@@ -2,7 +2,7 @@
 
 Базовый URL: `http://localhost:8080` (или `APP_URL`).
 
-Авторизация — Bearer Sanctum token (см. [AUTH.md](AUTH.md) и пакет fuisic-laravel-auth).
+Авторизация — Bearer Sanctum token (см. [AUTH.md](AUTH.md) и пакет fuisic-auth).
 
 OpenAPI/Swagger: `/api/documentation`
 
@@ -41,7 +41,7 @@ URI задаются enum `App\Enums\Uri`.
 
 ## Auth API
 
-Не дублируется здесь — см. [fuisic-laravel-auth/docs/API.md](https://github.com/Johny314/fuisic-laravel-auth/blob/main/docs/API.md):
+Не дублируется здесь — см. [fuisic-auth/docs/API.md](https://github.com/Johny314/fuisic-auth/blob/main/docs/API.md):
 
 - `/register`, `/login`, `/logout`, `/me`
 - `/email/verify/*`, `/password/*`
