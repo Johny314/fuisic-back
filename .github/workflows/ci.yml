@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 env:
-  PHP_VERSION: '8.3'
+  PHP_VERSION: '8.4'
   PHP_EXTENSIONS: pdo_pgsql, intl, gd, bcmath, gmp, zip, sockets, redis
 
 jobs:
@@ -68,7 +68,7 @@ jobs:
 
     services:
       pgsql:
-        image: postgres:15
+        image: postgres:18
         env:
           POSTGRES_DB: testing
           POSTGRES_USER: fuisic

@@ -8,7 +8,7 @@ API-бэкенд платформы FUISIC на Laravel 11: карточки, т
 
 ## Стек
 
-- PHP 8.3, Laravel 11
+- PHP 8.4, Laravel 11
 - PostgreSQL 15, Redis
 - RabbitMQ (очереди авторизации)
 - Docker Compose (nginx + php-fpm)

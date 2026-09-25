@@ -2,7 +2,7 @@ USER_ID ?= $(shell id -u)
 GROUP_ID ?= $(shell id -g)
 COMPOSE = docker compose
 
-setup-local: env-prepare storage-setup composer-install up app-key-generate package-discover db-setup swagger-generate
+setup-local: env-prepare storage-setup build composer-install up app-key-generate package-discover db-setup swagger-generate
 
 start: up
 stop: down
@@ -13,21 +13,18 @@ env-prepare:
 storage-setup:
 	mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/app/public bootstrap/cache
 
+# Composer в образе приложения (PHP 8.4 + все расширения), от имени текущего пользователя
+COMPOSER = $(COMPOSE) run --rm --no-deps -u "$(USER_ID):$(GROUP_ID)" -e CACHE_STORE=array app composer
+
+build:
+	$(COMPOSE) build app
+
 composer-install:
-	docker run --rm -u "$(USER_ID):$(GROUP_ID)" \
-		-v "$(CURDIR):/var/www/html" \
-		-v "$(CURDIR)/../fuisic-auth:/var/www/fuisic-auth:ro" \
-		-w /var/www/html \
-		-e CACHE_STORE=array \
-		laravelsail/php83-composer:latest \
-		composer install --ignore-platform-reqs --no-scripts
-	docker run --rm -u "$(USER_ID):$(GROUP_ID)" \
-		-v "$(CURDIR):/var/www/html" \
-		-v "$(CURDIR)/../fuisic-auth:/var/www/fuisic-auth:ro" \
-		-w /var/www/html \
-		-e CACHE_STORE=array \
-		laravelsail/php83-composer:latest \
-		composer dump-autoload
+	$(COMPOSER) install --no-interaction --no-scripts
+	$(COMPOSER) dump-autoload
+
+composer:
+	$(COMPOSER) $(filter-out $@,$(MAKECMDGOALS))
 
 up:
 	$(COMPOSE) up -d --build
