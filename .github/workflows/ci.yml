@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  PHP_VERSION: '8.3'
+  PHP_EXTENSIONS: pdo_pgsql, intl, gd, bcmath, gmp, zip, sockets, redis
+
+jobs:
+  pint:
+    name: Pint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: fuisic-back
+
+      # composer path repository "../fuisic-auth": берём ветку с тем же именем, иначе main
+      - name: Resolve fuisic-auth ref
+        id: auth
+        run: |
+          branch="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          if git ls-remote --exit-code --heads https://github.com/Johny314/fuisic-auth.git "$branch" >/dev/null; then
+            echo "ref=$branch" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=main" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v7
+        with:
+          repository: Johny314/fuisic-auth
+          ref: ${{ steps.auth.outputs.ref }}
+          path: fuisic-auth
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          coverage: none
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ hashFiles('fuisic-back/composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install dependencies
+        working-directory: fuisic-back
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
+
+      - name: Pint
+        working-directory: fuisic-back
+        run: vendor/bin/pint --test
+
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+
+    services:
+      pgsql:
+        image: postgres:15
+        env:
+          POSTGRES_DB: testing
+          POSTGRES_USER: fuisic
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fuisic -d testing"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_DATABASE: testing
+      DB_USERNAME: fuisic
+      DB_PASSWORD: secret
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: fuisic-back
+
+      - name: Resolve fuisic-auth ref
+        id: auth
+        run: |
+          branch="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          if git ls-remote --exit-code --heads https://github.com/Johny314/fuisic-auth.git "$branch" >/dev/null; then
+            echo "ref=$branch" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=main" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v7
+        with:
+          repository: Johny314/fuisic-auth
+          ref: ${{ steps.auth.outputs.ref }}
+          path: fuisic-auth
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          coverage: none
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ hashFiles('fuisic-back/composer.lock') }}
+          restore-keys: composer-
+
+      - name: Prepare environment
+        working-directory: fuisic-back
+        run: |
+          cp .env.example .env
+          composer install --no-interaction --no-progress --prefer-dist
+          php artisan key:generate
+
+      - name: PHPUnit
+        working-directory: fuisic-back
+        run: php artisan test
