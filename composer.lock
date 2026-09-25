@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "171b2b4acebfc9e92857d529d25d7c55",
+    "content-hash": "32ddcb86a824ae6bc6e68186d05bc60e",
     "packages": [
         {
             "name": "amphp/amp",
@@ -2259,12 +2259,12 @@
             "time": "2023-10-12T05:21:21+00:00"
         },
         {
-            "name": "fuisic/laravel-auth",
+            "name": "fuisic/auth",
             "version": "dev-main",
             "dist": {
                 "type": "path",
-                "url": "../fuisic-laravel-auth",
-                "reference": "1f96fc7c27a2b12b6b847423d0e73b21d1e09f0f"
+                "url": "../fuisic-auth",
+                "reference": "a745b1ed27d7bbc2ab583446b4a6c2af054cd246"
             },
             "require": {
                 "illuminate/auth": "^11.0",
@@ -2302,7 +2302,7 @@
             "authors": [
                 {
                     "name": "FUISIC",
-                    "homepage": "https://github.com/FUISIC"
+                    "homepage": "https://github.com/Johny314/fuisic-auth"
                 }
             ],
             "description": "Reusable Laravel authentication with OAuth, email verification, passkeys and RabbitMQ",
@@ -12427,13 +12427,13 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fuisic/laravel-auth": 20
+        "fuisic/auth": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
 }
