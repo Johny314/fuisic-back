@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.0](https://github.com/Johny314/fuisic-back/compare/v3.7.1...v4.0.0) (2026-09-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* поле `user_type` исчезло из `GET /me`, `GET /user`, `GET /user/{user}`, ответов `POST/PUT /user` и схемы OpenAPI `User`; в запросах оно игнорируется. Роль определяется по `roles`/`permissions` из `GET /me`. Требует fuisic-auth с `feat!: stop returning user_type from /me`.
+
+### Возможности
+
+* drop the legacy user_type field in favour of roles ([07f3a19](https://github.com/Johny314/fuisic-back/commit/07f3a1938111587dcc90e9f665ea0dccb3eb1f3e))
+* staff audit log with admin viewer and 12-month retention ([d1d5fbd](https://github.com/Johny314/fuisic-back/commit/d1d5fbdd1f734ff44af21e68b299d5c2e3f1bd86))
+
 ## [3.7.1](https://github.com/Johny314/fuisic-back/compare/v3.7.0...v3.7.1) (2026-09-26)
 
 
