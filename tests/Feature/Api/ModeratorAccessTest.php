@@ -178,15 +178,15 @@ class ModeratorAccessTest extends TestCase
 
         $this->putJson("/user/{$this->admin->id}", ['name' => 'Взлом', 'email' => $this->admin->email])->assertForbidden();
         $this->deleteJson("/user/{$this->admin->id}")->assertForbidden();
-        // тип из запроса API не берётся: создаётся ученик
+        // роль из запроса API не берётся: создаётся ученик
         $this->postJson('/user', [
             'name' => 'Второй админ',
             'email' => 'root@example.com',
             'password' => 'password',
-            'user_type' => 'admin',
+            'roles' => ['admin'],
         ])->assertSuccessful();
 
-        $this->assertFalse(User::query()->where('email', 'root@example.com')->firstOrFail()->isAdmin());
+        $this->assertSame(['student'], User::query()->where('email', 'root@example.com')->firstOrFail()->getRoleNames()->all());
         $this->assertNotSoftDeleted($this->admin);
     }
 

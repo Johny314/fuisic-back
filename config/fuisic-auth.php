@@ -1,7 +1,6 @@
 <?php
 
 use App\Enums\RoleName;
-use App\Enums\UserType;
 use App\Models\User;
 
 $packageConfig = dirname(__DIR__).'/vendor/fuisic/auth/config/fuisic-auth.php';
@@ -24,9 +23,6 @@ return array_replace_recursive(
             // admin и moderator назначаются только вручную
             'roles' => array_map(fn (RoleName $role) => $role->value, RoleName::REGISTRABLE),
             'default_role' => RoleName::student->value,
-            'defaults' => [
-                'user_type' => UserType::student->value,
-            ],
         ],
 
         'oauth' => [

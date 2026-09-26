@@ -39,7 +39,6 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 Файл `config/fuisic-auth.php` расширяет базовый config пакета:
 
 - `register.roles` — роли на выбор при регистрации (`student`, `teacher`, `parent` из `App\Enums\RoleName::REGISTRABLE`), `register.default_role` — `student`; admin и moderator назначаются только вручную
-- `register.defaults` — `user_type = student` (устаревшее поле, удаляется в fuisic-back#29)
 - `login.username_column = username` — `POST /login` принимает поле `login`: email или логин ребёнка (без учёта регистра); старое поле `email` тоже работает
 - включение OAuth-провайдеров через env
 - `passkeys.relying_party` для WebAuthn
@@ -116,7 +115,7 @@ FUISIC_AUTH_PASSKEY_RP_ID=localhost
 - [spatie/laravel-permission](https://spatie.be/docs/laravel-permission) 8.x, guard `web` для API и админки (`User::$guard_name`).
 - Стартовые роли и права — `App\Enums\RoleName`, `App\Enums\PermissionName`; создаёт их `App\Support\RoleCatalog::install()` (миграция и `RoleSeeder`). Повторный запуск добавляет недостающее и не трогает права существующих ролей — их меняют в админке.
 - admin — суперадмин через `Gate::before` (`AppServiceProvider`), прав в роли не хранит.
-- Пока жив `user_type`, модель держит соответствующую роль admin/teacher/student (хуки `created`/`updated` в `User`); moderator и parent назначаются только ролью. Роли из админки сохраняет `User::syncRolesWithUserType()`: `user_type` выводится из ролей (`RoleName::legacyUserTypeFor`: admin → admin, иначе teacher → teacher, иначе student) без хука `updated`.
+- Роли — единственный источник правды о типе пользователя (поле `user_type` удалено в fuisic-back#29). Пользователь без роли не остаётся: хук `created` в `User` выдаёт student, если роль не назначена; регистрация и OAuth (`assignRegistrationRole`), фабрика (`admin()`, `teacher()`…) и админка заменяют её через `syncRoles`.
 - Модель роли — `App\Models\Role` (наследник spatie с `CrudTrait`, `config/permission.php`); подписи для админки — `RoleName::label()`, `PermissionName::label()`.
 - `GET /me` дополнительно отдаёт `roles`, `permissions` (у admin — все), `teacher_verified` (роль teacher и право `catalog.submit`) и `teacher_verification` — статус последней заявки на «Проверенного учителя» (`{status, reviewer_comment, submitted_at, reviewed_at}` или `null`, см. [API.md](API.md#проверенный-учитель)) — `User::authProfile()`.
 
@@ -170,7 +169,7 @@ FUISIC_AUTH_PASSKEY_RP_ID=localhost
 
   Модератор по умолчанию видит пользователей (без изменения), блокировку не-персонала и каталог; ролей и очереди учителей не видит.
 - **Роли** (`RoleCrudController`, `/admin/role`): название (латиница, идентификатор в `GET /me` → `roles`) и права галочками — все записи таблицы `permissions` с русскими подписями. Стартовые роли (`RoleName`) нельзя удалить и переименовать — даже admin; роль admin прав не хранит, в форме вместо галочек — пометка «суперадмин». Права сохраняются через `syncPermissions()` со сбросом кэша spatie — изменения сразу действуют в API.
-- **Назначение ролей** — в карточке пользователя (`UserCrudController`, поле «Роли», несколько ролей): видно и принимается только с `roles.manage` (`users.manage` без него меняет пользователя, но не роли — поле `role_ids` запрещено валидацией). Роль admin выдаёт только admin; снять admin с себя нельзя; нужна хотя бы одна роль. Поля `user_type` в форме нет — он выводится из ролей.
+- **Назначение ролей** — в карточке пользователя (`UserCrudController`, поле «Роли», несколько ролей): видно и принимается только с `roles.manage` (`users.manage` без него меняет пользователя, но не роли — поле `role_ids` запрещено валидацией). Роль admin выдаёт только admin; снять admin с себя нельзя; нужна хотя бы одна роль.
 - Email в форме пользователя обязателен, только если у него нет `username` (аккаунт ребёнка).
 
 API (`routes/api.php`) подключён группой `api` без префикса: без сессий и CSRF, авторизация только Bearer-токеном.

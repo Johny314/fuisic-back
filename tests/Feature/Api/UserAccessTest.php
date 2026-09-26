@@ -38,6 +38,42 @@ class UserAccessTest extends TestCase
             ->assertJsonMissingPath('data.0.password');
     }
 
+    public function test_user_api_has_no_user_type(): void
+    {
+        $admin = User::factory()->admin()->create();
+        Sanctum::actingAs($admin);
+
+        $this->getJson('/user')
+            ->assertOk()
+            ->assertJsonPath('data.0.id', $admin->id)
+            ->assertJsonMissingPath('data.0.user_type');
+        $this->getJson("/user/{$admin->id}")
+            ->assertOk()
+            ->assertJsonPath('id', $admin->id)
+            ->assertJsonMissingPath('user_type');
+        $this->putJson("/user/{$admin->id}", ['name' => 'Админ', 'email' => $admin->email])
+            ->assertOk()
+            ->assertJsonPath('name', 'Админ')
+            ->assertJsonMissingPath('user_type');
+    }
+
+    public function test_user_created_via_api_is_a_student(): void
+    {
+        Sanctum::actingAs(User::factory()->admin()->create());
+
+        $this->postJson('/user', [
+            'name' => 'Новый',
+            'email' => 'new@example.com',
+            'password' => 'password',
+            'user_type' => 'teacher',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('email', 'new@example.com')
+            ->assertJsonMissingPath('user_type');
+
+        $this->assertSame(['student'], User::query()->where('email', 'new@example.com')->firstOrFail()->getRoleNames()->all());
+    }
+
     public function test_student_cannot_create_users(): void
     {
         Sanctum::actingAs(User::factory()->create());

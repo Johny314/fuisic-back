@@ -70,7 +70,6 @@ class UserCrudController extends CrudController
             ->hint('Необязателен для аккаунта ребёнка с логином.');
         CRUD::field('password')->label('Пароль')->type('password');
 
-        // user_type не редактируется: он выводится из ролей (User::syncRolesWithUserType)
         if (self::managesRoles()) {
             $student = Role::findByName(RoleName::student->value, RoleCatalog::GUARD);
 
@@ -188,7 +187,7 @@ class UserCrudController extends CrudController
             return;
         }
 
-        $user->syncRolesWithUserType(Role::query()
+        $user->syncRoles(Role::query()
             ->where('guard_name', RoleCatalog::GUARD)
             ->whereKey((array) $request->input(UserRequest::ROLES))
             ->get());

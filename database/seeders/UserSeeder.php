@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -10,10 +9,9 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory()->create([
+        User::factory()->admin()->create([
             'name' => 'Администратор',
             'email' => 'admin@fuisic.local',
-            'user_type' => UserType::admin->value,
         ]);
 
         User::factory()->moderator()->create([
@@ -33,16 +31,14 @@ class UserSeeder extends Seeder
             'grade' => 7,
         ]);
 
-        User::factory()->create([
+        User::factory()->teacher()->create([
             'name' => 'Пётр Иванов',
             'email' => 'teacher@fuisic.local',
-            'user_type' => UserType::teacher->value,
         ]);
 
-        User::factory()->create([
+        User::factory()->teacher()->create([
             'name' => 'Анна Смирнова',
             'email' => 'teacher2@fuisic.local',
-            'user_type' => UserType::teacher->value,
         ]);
 
         $students = [
@@ -57,7 +53,6 @@ class UserSeeder extends Seeder
             User::factory()->create([
                 'name' => $student['name'],
                 'email' => $student['email'],
-                'user_type' => UserType::student->value,
             ]);
         }
     }
