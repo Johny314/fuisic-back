@@ -2,7 +2,7 @@ USER_ID ?= $(shell id -u)
 GROUP_ID ?= $(shell id -g)
 COMPOSE = docker compose
 
-setup-local: env-prepare storage-setup build composer-install up app-key-generate package-discover db-setup swagger-generate
+setup-local: env-prepare storage-setup build composer-install up app-key-generate storage-link package-discover db-setup swagger-generate
 
 start: up
 stop: down
@@ -34,6 +34,11 @@ down:
 
 app-key-generate:
 	$(COMPOSE) exec app php artisan key:generate
+
+# public/storage → storage/app/public: оттуда Backpack (basset) отдаёт CSS/JS админки;
+# относительный — чтобы работал и на хосте, и в контейнерах; --force — повторный запуск не падает
+storage-link:
+	$(COMPOSE) exec app php artisan storage:link --relative --force
 
 package-discover:
 	$(COMPOSE) exec app php artisan package:discover --ansi

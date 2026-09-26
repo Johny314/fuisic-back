@@ -64,6 +64,8 @@ storage/app/public
 bootstrap/cache
 ```
 
+и симлинк `public/storage` → `storage/app/public` (`make storage-link`): через него Backpack отдаёт CSS/JS админки. Без симлинка `/admin` открывается без стилей, а запросы к `/storage/basset/...` отвечают 403. Уже развёрнутый проект: `make storage-link`.
+
 ## Passkeys
 
 Таблица `passkeys` (laravel/passkeys) уже опубликована в `database/migrations`. Старые ключи `webauthn_credentials` (laragear) не переносятся — миграция удаляет таблицу, passkey регистрируется заново.
