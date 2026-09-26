@@ -2,6 +2,7 @@
 
 namespace App\Models\Card;
 
+use App\Models\Concerns\AuditsAdminChanges;
 use App\Models\Section;
 use App\Models\User;
 use App\Services\MediaStorage;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CardSet extends Model
 {
+    use AuditsAdminChanges;
     use CrudTrait;
     use HasFactory, SoftDeletes;
 

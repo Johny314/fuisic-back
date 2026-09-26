@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Services\AuditLog;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -11,7 +12,8 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        // флаг «пишем изменения админки» живёт в пределах запроса
+        $this->app->scoped(AuditLog::class);
     }
 
     public function boot(): void

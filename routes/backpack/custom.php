@@ -24,6 +24,7 @@ Route::group([
     Route::crud('card-set', 'CardSetCrudController');
     Route::crud('test', 'TestCrudController');
     Route::crud('teacher-verification', 'TeacherVerificationCrudController');
+    Route::crud('audit-log', 'AuditLogCrudController');
 }); // this should be the absolute last line of this file
 
 /**

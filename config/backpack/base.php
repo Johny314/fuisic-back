@@ -3,6 +3,7 @@
 use App\Http\Middleware\AuthenticateBackpackSession;
 use App\Http\Middleware\CheckIfAdmin;
 use App\Http\Middleware\LogoutBlockedBackpackUser;
+use App\Http\Middleware\RecordAdminActivity;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 
 return [
@@ -120,6 +121,7 @@ return [
         CheckIfAdmin::class,
         ConvertEmptyStringsToNull::class,
         AuthenticateBackpackSession::class,
+        RecordAdminActivity::class,
         // \Backpack\CRUD\app\Http\Middleware\UseBackpackAuthGuardInsteadOfDefaultAuthGuard::class,
     ],
 
