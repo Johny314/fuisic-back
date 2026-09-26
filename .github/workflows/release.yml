@@ -28,7 +28,7 @@ jobs:
           branches=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --label "autorelease: pending" \
             --json headRefName --jq '.[].headRefName')
           [ -z "$branches" ] && exit 0
-          for attempt in $(seq 1 12); do
+          for _ in $(seq 1 12); do
             approved=0
             for branch in $branches; do
               for id in $(gh api "repos/$GITHUB_REPOSITORY/actions/runs?branch=$branch&event=pull_request&status=action_required" \
