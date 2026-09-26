@@ -20,6 +20,7 @@ enum Tag: string
     case files = 'files';
     case teacher_verification = 'teacher_verification';
     case settings = 'settings';
+    case repetitions = 'repetitions';
 
     public function label(): string
     {
@@ -36,6 +37,7 @@ enum Tag: string
             self::files => 'Файлы',
             self::teacher_verification => 'Проверенный учитель',
             self::settings => 'Настройки',
+            self::repetitions => 'Повторения',
         };
     }
 }
