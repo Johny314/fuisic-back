@@ -4,6 +4,7 @@ namespace App\Support\Tasks;
 
 use App\Models\Test\Task;
 use App\Models\Test\TaskOption;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Validator;
 
 /**
@@ -66,20 +67,46 @@ abstract class ChoiceQuestion extends QuestionType
         return $texts->isEmpty() ? null : $texts->implode('; ');
     }
 
-    // Временно (до #61): ответ — id вариантов через запятую, порядок не важен
-    public function matches(Task $task, ?string $answer): bool
+    public function check(Task $task, array $answer): AnswerCheck
     {
-        if ($answer === null || trim($answer) === '') {
-            return false;
-        }
+        $correct = $this->correctOptions($task)->pluck('id')->all();
+        // id не из этого вопроса не засчитываются ни в плюс, ни в минус
+        $selected = array_values(array_intersect(array_unique($this->selectedIds($answer)), $task->options->pluck('id')->all()));
 
-        $given = collect(explode(',', $answer))->map(fn ($id) => (int) trim($id))->unique()->sort()->values();
-        $expected = $this->correctOptions($task)->pluck('id')->sort()->values();
-
-        return $given->all() === $expected->all();
+        return AnswerCheck::fraction($this->fraction($selected, $correct), $task->points);
     }
 
-    private function correctOptions(Task $task)
+    /**
+     * id выбранных вариантов из ответа.
+     *
+     * @param  array<string, mixed>  $answer
+     * @return list<int>
+     */
+    abstract protected function selectedIds(array $answer): array;
+
+    /**
+     * Доля верности по выбранным (только варианты этого вопроса, без повторов) и верным id.
+     *
+     * @param  list<int>  $selected
+     * @param  list<int>  $correct
+     */
+    abstract protected function fraction(array $selected, array $correct): float;
+
+    /**
+     * id из устаревшего `answer`: «3» или «3,5», порядок не важен; не числа пропускаются.
+     *
+     * @param  array<string, mixed>  $answer
+     * @return list<int>
+     */
+    protected static function legacyIds(array $answer): array
+    {
+        $ids = array_map('trim', explode(',', self::legacyAnswer($answer) ?? ''));
+
+        return array_values(array_map('intval', array_filter($ids, 'ctype_digit')));
+    }
+
+    /** @return Collection<int, TaskOption> */
+    private function correctOptions(Task $task): Collection
     {
         return $task->options->filter(fn (TaskOption $option) => $option->is_correct)->values();
     }

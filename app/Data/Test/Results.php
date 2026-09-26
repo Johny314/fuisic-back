@@ -13,8 +13,11 @@ class Results extends Data
     #[Property(example: '1')]
     public int $time;
 
-    #[Property(example: '1')]
-    public int $total_score;
+    #[Property(example: 4.5, description: 'Сумма баллов по ответам, до 2 знаков')]
+    public float $total_score;
+
+    #[Property(example: 6, description: 'Сумма баллов всех вопросов теста, в том числе без ответа')]
+    public int $max_score;
 
     #[Property(
         type: 'array',

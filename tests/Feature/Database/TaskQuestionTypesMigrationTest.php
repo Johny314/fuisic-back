@@ -75,8 +75,8 @@ class TaskQuestionTypesMigrationTest extends TestCase
         }
 
         // старые ответы по-прежнему засчитываются
-        $this->assertTrue($tasks[$ids[1]]->definition()->matches($tasks[$ids[1]], '1.25'));
-        $this->assertTrue($tasks[$ids[4]]->definition()->matches($tasks[$ids[4]], 'ньютон'));
+        $this->assertTrue($tasks[$ids[1]]->definition()->check($tasks[$ids[1]], ['answer' => '1.25'])->isCorrect());
+        $this->assertTrue($tasks[$ids[4]]->definition()->check($tasks[$ids[4]], ['answer' => 'ньютон'])->isCorrect());
 
         $this->migration->down();
         $this->assertSame($answers, DB::table('tasks')->whereIn('id', $ids)->orderBy('id')->pluck('answer')->all());
