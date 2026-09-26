@@ -105,4 +105,10 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    /*
+    | Классы, которые разрешено десериализовать из кэша. false — никакие: в кэше
+    | только скаляры и массивы (laravel-data и Backpack сами кладут туда строки).
+    */
+    'serializable_classes' => false,
+
 ];
