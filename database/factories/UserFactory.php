@@ -49,7 +49,8 @@ class UserFactory extends Factory
             ->state(fn () => [
                 'email' => null,
                 'email_verified_at' => null,
-                'username' => str_replace('-', '_', $this->faker->unique()->slug(2)),
+                // всегда в пределах App\Rules\Username (3–32 символа): slug бывал длиннее 32
+                'username' => 'child_'.$this->faker->unique()->numerify('########'),
                 'grade' => $this->faker->numberBetween(1, 11),
                 'created_by_id' => $parent?->id,
             ])
