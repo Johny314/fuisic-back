@@ -4,12 +4,12 @@
 
 API-бэкенд платформы FUISIC на Laravel 13: карточки, тесты, задания и авторизация через пакет [fuisic/auth](https://github.com/Johny314/fuisic-auth).
 
-**Версия:** `v3.1.0`
+[![Release](https://img.shields.io/github/v/release/Johny314/fuisic-back)](https://github.com/Johny314/fuisic-back/releases) · [CHANGELOG](CHANGELOG.md)
 
 ## Стек
 
 - PHP 8.4, Laravel 13, Backpack 7
-- PostgreSQL 15, Redis
+- PostgreSQL 18, Redis 8, RabbitMQ 4
 - RabbitMQ (очереди авторизации)
 - Docker Compose (nginx + php-fpm)
 - Laravel Sanctum, Backpack (admin)
