@@ -23,7 +23,7 @@ class TaskAnswerVisibilityTest extends TestCase
         parent::setUp();
 
         $admin = User::factory()->admin()->create();
-        $this->catalogTask = Task::factory()->for(Test::factory()->for($admin))->create(['answer' => '42']);
+        $this->catalogTask = Task::factory()->for(Test::factory()->for($admin))->answer('42')->create();
     }
 
     public function test_guest_and_student_do_not_see_the_answer_of_a_catalog_task(): void
@@ -50,7 +50,7 @@ class TaskAnswerVisibilityTest extends TestCase
     public function test_owner_sees_the_answer_of_own_task(): void
     {
         $owner = User::factory()->teacher()->create();
-        $task = Task::factory()->for(Test::factory()->for($owner))->create(['answer' => 'секрет']);
+        $task = Task::factory()->for(Test::factory()->for($owner))->answer('секрет')->create();
         Sanctum::actingAs($owner);
 
         $this->getJson("/task/{$task->id}")->assertOk()->assertJsonPath('answer', 'секрет');

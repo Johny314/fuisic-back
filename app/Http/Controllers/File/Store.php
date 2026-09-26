@@ -18,6 +18,7 @@ class Store extends Controller
         path: Uri::files,
         tag: Tag::files,
         summary: 'Загрузить изображение в S3',
+        description: 'purpose: avatar | card_set_logo | task_image (картинка условия или варианта вопроса). Путь из ответа передаётся в `avatar_path` / `logo_path` / `image_path`.',
     )]
     #[Response(201, Data::class)]
     public function __invoke(Request $request, MediaStorage $media): Data
@@ -26,10 +27,14 @@ class Store extends Controller
 
         $validated = $request->validate([
             'file' => ['required', 'file', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:2048'],
-            'purpose' => ['required', 'in:avatar,card_set_logo'],
+            'purpose' => ['required', 'in:avatar,card_set_logo,task_image'],
         ]);
 
-        $directory = $validated['purpose'] === 'avatar' ? 'avatars' : 'card-set-logos';
+        $directory = match ($validated['purpose']) {
+            'avatar' => 'avatars',
+            'card_set_logo' => 'card-set-logos',
+            'task_image' => 'task-images',
+        };
         $path = $media->store($request->file('file'), $directory);
 
         return Data::from([

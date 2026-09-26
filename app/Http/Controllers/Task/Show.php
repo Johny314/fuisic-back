@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Task;
 
+use App\Data\Test\ShortTask;
 use App\Data\Test\Task as Data;
 use App\Enums\Uri;
 use App\Models\Test\Task;
@@ -20,20 +21,18 @@ class Show extends Controller
         path: Uri::task_id,
         tag: Tag::task,
         summary: 'Вывести задачу по ее id',
-        description: 'Правильный ответ (`answer`) — только тем, кто может редактировать задачу; остальным задача без ответа.',
+        description: 'Тем, кто может редактировать задачу, — вопрос целиком (`Task`, с ответами); остальным — как при прохождении (`ShortTask`).',
     )]
     #[ModelId('task', 'id задачи')]
 
-    #[Response(200, Data::class)]
+    #[Response(200, [Data::class, ShortTask::class])]
     #[Response(404, NotFound::class)]
-    public function __invoke(Task $task): Data
+    public function __invoke(Task $task): Data|ShortTask
     {
         $gate = Gate::forUser(ContentAccess::user());
         $gate->authorize('view', $task);
 
-        $data = Data::from($task);
-
-        // ответ видит только редактор — иначе его можно подсмотреть, не проходя тест
-        return $gate->allows('update', $task) ? $data : $data->except('answer');
+        // ответы видит только редактор — иначе их можно подсмотреть, не проходя тест
+        return $gate->allows('update', $task) ? Data::from($task) : ShortTask::from($task);
     }
 }

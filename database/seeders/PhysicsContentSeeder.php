@@ -6,12 +6,13 @@ use App\Enums\Classifications;
 use App\Enums\Difficulty;
 use App\Enums\RoleName;
 use App\Enums\Subject;
+use App\Enums\TaskType;
 use App\Models\Card\Card;
 use App\Models\Card\CardSet;
 use App\Models\Section;
-use App\Models\Test\Task;
 use App\Models\Test\Test;
 use App\Models\User;
+use App\Services\TaskEditor;
 use Illuminate\Database\Seeder;
 
 class PhysicsContentSeeder extends Seeder
@@ -128,6 +129,8 @@ class PhysicsContentSeeder extends Seeder
 
     private function seedTests(int $userId, $sections): void
     {
+        $editor = app(TaskEditor::class);
+
         $tests = [
             [
                 'name' => 'Равномерное движение',
@@ -202,6 +205,57 @@ class PhysicsContentSeeder extends Seeder
                 ],
             ],
             [
+                'name' => 'Механика: разные типы вопросов',
+                'section' => 'Динамика и законы Ньютона',
+                'class' => Classifications::second->value,
+                'difficulty' => Difficulty::medium->value,
+                'tasks' => [
+                    [
+                        'type' => TaskType::single->value,
+                        'problem_statement' => 'В каких единицах в СИ измеряется сила $F = ma$?',
+                        'explanation' => '$1\\,Н = 1\\,кг \\cdot м/с^2$ — единица силы названа в честь Ньютона.',
+                        'shuffle_options' => true,
+                        'options' => [
+                            ['text' => 'Ньютон', 'is_correct' => true],
+                            ['text' => 'Джоуль', 'is_correct' => false],
+                            ['text' => 'Ватт', 'is_correct' => false],
+                            ['text' => 'Паскаль', 'is_correct' => false],
+                        ],
+                    ],
+                    [
+                        'type' => TaskType::multiple->value,
+                        'problem_statement' => 'Какие из величин векторные?',
+                        'points' => 2,
+                        'explanation' => 'У скорости, силы и ускорения есть направление, масса и время — скаляры.',
+                        'options' => [
+                            ['text' => 'Скорость', 'is_correct' => true],
+                            ['text' => 'Масса', 'is_correct' => false],
+                            ['text' => 'Сила', 'is_correct' => true],
+                            ['text' => 'Время', 'is_correct' => false],
+                            ['text' => 'Ускорение', 'is_correct' => true],
+                        ],
+                    ],
+                    [
+                        'type' => TaskType::number->value,
+                        'problem_statement' => 'С каким ускорением $g$ падает тело у поверхности Земли без сопротивления воздуха? Ответ — с точностью до десятых.',
+                        'explanation' => 'Без сопротивления воздуха все тела падают с ускорением $g \\approx 9{,}8\\,м/с^2$.',
+                        'settings' => ['value' => 9.8, 'tolerance' => 0.1, 'tolerance_type' => 'absolute', 'units' => ['м/с²', 'м/с^2', 'm/s^2']],
+                    ],
+                    [
+                        'type' => TaskType::number->value,
+                        'problem_statement' => 'Автомобиль массой 1000 кг разгоняется с ускорением 2,5 м/с². Найдите равнодействующую силу (в кН, допуск 5%).',
+                        'explanation' => '$F = ma = 1000 \\cdot 2{,}5 = 2500\\,Н = 2{,}5\\,кН$',
+                        'settings' => ['value' => 2.5, 'tolerance' => 5, 'tolerance_type' => 'percent', 'units' => ['кН', 'kN']],
+                    ],
+                    [
+                        'type' => TaskType::text->value,
+                        'problem_statement' => 'Как называется свойство тела сохранять скорость, пока на него не действуют другие тела?',
+                        'explanation' => 'Это первый закон Ньютона — закон инерции.',
+                        'settings' => ['answers' => ['инерция', 'инертность', 'инерция тела']],
+                    ],
+                ],
+            ],
+            [
                 'name' => 'Термодинамика',
                 'section' => 'Молекулярная физика и термодинамика',
                 'class' => Classifications::third->value,
@@ -225,12 +279,16 @@ class PhysicsContentSeeder extends Seeder
             ]);
 
             foreach ($testData['tasks'] as $taskData) {
-                Task::query()->create([
-                    'test_id' => $test->id,
-                    'problem_statement' => $taskData['q'],
-                    'answer' => $taskData['a'],
-                ]);
+                $editor->create($test, isset($taskData['q']) ? $this->legacyTask($taskData['q'], $taskData['a']) : $taskData);
             }
         }
+    }
+
+    /** Задача в старом формате «условие + ответ»: число → ввод числа без допуска, как в миграции. */
+    private function legacyTask(string $statement, string $answer): array
+    {
+        return ['problem_statement' => $statement] + (is_numeric($answer)
+            ? ['type' => TaskType::number->value, 'settings' => ['value' => $answer]]
+            : ['type' => TaskType::text->value, 'settings' => ['answers' => [$answer]]]);
     }
 }

@@ -33,13 +33,14 @@ class CheckAnswers extends Controller
     {
         Gate::forUser(ContentAccess::user())->authorize('view', $test);
 
-        $tasks = $test->tasks()->get()->keyBy('id');
+        $tasks = $test->tasks()->with('options')->get()->keyBy('id');
 
         $results = [];
 
         foreach ($answers->answers as $answer) {
             $task = $tasks->get($answer['task_id']);
-            $isCorrect = $task && $task->answer === $answer['answer'];
+            // временно — сравнение «как раньше» по типу; настоящая проверка и баллы — fuisic-back#61
+            $isCorrect = $task && $task->definition()->matches($task, $answer['answer']);
 
             $results[] = Result::from([
                 'task' => $task,
