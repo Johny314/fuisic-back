@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.0](https://github.com/Johny314/fuisic-back/compare/v3.5.0...v3.6.0) (2026-09-26)
+
+
+### Возможности
+
+* user blocking with reason, term and history ([3ff62e3](https://github.com/Johny314/fuisic-back/commit/3ff62e3ac1f431d14de1358613b238c9ae6894ca))
+
 ## [3.5.0](https://github.com/Johny314/fuisic-back/compare/v3.4.0...v3.5.0) (2026-09-26)
 
 
