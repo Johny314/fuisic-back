@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/Johny314/fuisic-back/compare/v3.3.0...v3.4.0) (2026-09-26)
+
+
+### Возможности
+
+* teacher verification applications ([00289e2](https://github.com/Johny314/fuisic-back/commit/00289e2142b1809a4936d375f228b9d3b36bcebc))
+
 ## [3.3.0](https://github.com/Johny314/fuisic-back/compare/v3.2.0...v3.3.0) (2026-09-26)
 
 
