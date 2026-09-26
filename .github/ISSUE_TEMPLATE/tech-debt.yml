@@ -1,0 +1,24 @@
+name: Технический долг
+description: Рефакторинг, обновление зависимостей, улучшение надёжности
+labels: [tech-debt]
+projects: ["Johny314/3"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Что улучшить
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Почему это важно
+      description: Риск, боль или цена, если не делать.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Критерии готовности
+      value: |
+        - [ ] 
+    validations:
+      required: true

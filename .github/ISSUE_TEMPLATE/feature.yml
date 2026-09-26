@@ -1,0 +1,31 @@
+name: Фича
+description: Новая возможность или изменение поведения
+labels: [feature]
+projects: ["Johny314/3"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Что и зачем
+      description: Что должно появиться и какую проблему пользователя это решает.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Критерии готовности
+      description: Проверяемые пункты — по ним задача считается сделанной.
+      value: |
+        - [ ] 
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Не входит в задачу
+      description: Что сознательно откладываем (необязательно).
+  - type: textarea
+    id: notes
+    attributes:
+      label: Детали
+      description: Макеты, ссылки, связанные задачи, технические идеи.
