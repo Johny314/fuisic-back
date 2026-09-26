@@ -26,6 +26,10 @@ enum Uri: string
     case user = 'user';
     case user_id = 'user/{user}';
 
+    case children = 'children';
+    case children_id = 'children/{child}';
+    case children_password = 'children/{child}/password';
+
     case register = 'register';
     case login = 'login';
     case me = 'me';

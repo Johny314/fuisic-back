@@ -38,6 +38,9 @@ OpenAPI/Swagger: `/api/documentation`
 | POST | `test/{test}/answers` | Проверка ответов (auth) |
 | GET | `teacher_verification` | Последняя заявка учителя на «Проверенного учителя» (404 — заявок не было) |
 | POST | `teacher_verification` | Подать заявку (только роль teacher; 409 — есть заявка на рассмотрении или статус уже подтверждён) |
+| GET/POST | `children` | Мои дети / создать ребёнка (права `children.view` / `children.manage`, см. [AUTH.md](AUTH.md#родитель-и-дети)) |
+| GET/PUT/DELETE | `children/{child}` | Ребёнок: просмотр, профиль, удаление |
+| PUT | `children/{child}/password` | Сброс пароля ребёнку |
 
 URI задаются enum `App\Enums\Uri`.
 

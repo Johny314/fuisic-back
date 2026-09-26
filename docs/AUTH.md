@@ -40,6 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 
 - `register.roles` — роли на выбор при регистрации (`student`, `teacher`, `parent` из `App\Enums\RoleName::REGISTRABLE`), `register.default_role` — `student`; admin и moderator назначаются только вручную
 - `register.defaults` — `user_type = student` (устаревшее поле, удаляется в fuisic-back#29)
+- `login.username_column = username` — `POST /login` принимает поле `login`: email или логин ребёнка (без учёта регистра); старое поле `email` тоже работает
 - включение OAuth-провайдеров через env
 - `passkeys.relying_party` для WebAuthn
 
@@ -116,6 +117,25 @@ FUISIC_AUTH_PASSKEY_RP_ID=localhost
 - Пока жив `user_type`, модель держит соответствующую роль admin/teacher/student (хуки `created`/`updated` в `User`); moderator и parent назначаются только ролью.
 - `GET /me` дополнительно отдаёт `roles`, `permissions` (у admin — все), `teacher_verified` (роль teacher и право `catalog.submit`) и `teacher_verification` — статус последней заявки на «Проверенного учителя» (`{status, reviewer_comment, submitted_at, reviewed_at}` или `null`, см. [API.md](API.md#проверенный-учитель)) — `User::authProfile()`.
 
+## Родитель и дети
+
+- Связь многие ко многим — таблица `parent_child` (`User::children()` / `User::parents()`); `users.created_by_id` — родитель, создавший аккаунт.
+- Аккаунт ребёнка: роль student, `email = null`, логин в `users.username` (unique, хранится в нижнем регистре), класс — `users.grade` (1–11). Формат логина — `App\Rules\Username`: латиница, цифры, `_` и `.`, 3–32 символа, без `@`; уникален без учёта регистра, включая удалённые аккаунты.
+- Ребёнок входит `POST /login` с `{ "login": "<логин>", "password": "..." }` без подтверждения email. Email можно добавить позже через `PUT /user/{id}` (у пользователя без логина email обязателен); вход по неподтверждённому email по-прежнему даёт 403.
+- Логин, роли и связь с родителем ребёнок сам не меняет: `PUT /user/{id}` их не принимает, `/children/*` требует прав родителя.
+- `GET /me` отдаёт `username` (`User::authProfile()`).
+
+| Метод | URI | Право | Описание |
+|-------|-----|-------|----------|
+| GET | `/children` | `children.view` | Мои дети |
+| GET | `/children/{child}` | `children.view` | Аккаунт ребёнка |
+| POST | `/children` | `children.manage` | Создать: `name`, `username`, `grade`, `password`, `password_confirmation` |
+| PUT | `/children/{child}` | `children.manage` | Изменить `name`, `username`, `grade` |
+| PUT | `/children/{child}/password` | `children.manage` | Сбросить пароль (`password`, `password_confirmation`); все токены ребёнка отзываются |
+| DELETE | `/children/{child}` | `children.manage` | Удалить аккаунт (soft delete, токены отзываются); только родитель-создатель, иначе 403 |
+
+Без права — 403; чужой ребёнок — 404 (существование не раскрывается). Демо: родитель `parent@fuisic.local`, ребёнок — логин `masha`, пароль `password`.
+
 ## Admin (Backpack)
 
 Админка `/admin` использует **отдельную** session-авторизацию Backpack (группа `web`, CSRF включён), не Sanctum API. Middleware `CheckIfAdmin` проверяет `user_type === admin`.
@@ -136,4 +156,4 @@ API (`routes/api.php`) подключён группой `api` без префи
 
 ## Сиды
 
-`UserFactory` создаёт пользователей с `email_verified_at = now()` для локального login без письма.
+`UserFactory` создаёт пользователей с `email_verified_at = now()` для локального login без письма; `UserFactory::child($parent)` — аккаунт ребёнка без email с логином.

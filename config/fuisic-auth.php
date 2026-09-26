@@ -15,6 +15,11 @@ return array_replace_recursive(
     [
         'user_model' => User::class,
 
+        // вход по логину ребёнка (поле `login`), см. App\Rules\Username
+        'login' => [
+            'username_column' => 'username',
+        ],
+
         'register' => [
             // admin и moderator назначаются только вручную
             'roles' => array_map(fn (RoleName $role) => $role->value, RoleName::REGISTRABLE),

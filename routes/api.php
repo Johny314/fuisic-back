@@ -1,8 +1,10 @@
 <?php
 
+use App\Enums\PermissionName;
 use App\Enums\Uri;
 use App\Http\Controllers\Card;
 use App\Http\Controllers\CardSet;
+use App\Http\Controllers\Child;
 use App\Http\Controllers\File\Store;
 use App\Http\Controllers\Filters;
 use App\Http\Controllers\Section;
@@ -43,6 +45,19 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get(Uri::teacher_verification->value, TeacherVerification\Show::class);
     Route::post(Uri::teacher_verification->value, TeacherVerification\Store::class);
+
+    // Аккаунты детей родителя; чужой ребёнок — 404
+    Route::middleware('can:'.PermissionName::childrenView->value)->group(function () {
+        Route::get(Uri::children->value, Child\Index::class);
+        Route::get(Uri::children_id->value, Child\Show::class)->whereNumber('child');
+    });
+
+    Route::middleware('can:'.PermissionName::childrenManage->value)->group(function () {
+        Route::post(Uri::children->value, Child\Store::class);
+        Route::put(Uri::children_id->value, Child\Update::class)->whereNumber('child');
+        Route::put(Uri::children_password->value, Child\ResetPassword::class)->whereNumber('child');
+        Route::delete(Uri::children_id->value, Child\Destroy::class)->whereNumber('child');
+    });
 });
 
 Route::get(Uri::card_set->value, CardSet\Index::class);

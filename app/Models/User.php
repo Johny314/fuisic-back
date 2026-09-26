@@ -9,7 +9,9 @@ use App\Services\MediaStorage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Fuisic\Auth\Traits\HasFuisicAuth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -76,7 +78,25 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             // уже захэшированные значения (Hash::make в контроллерах) повторно не хэшируются
             'password' => 'hashed',
             'user_type' => UserType::class,
+            'grade' => 'integer',
         ];
+    }
+
+    /** Логин уникален без учёта регистра — храним в нижнем. */
+    protected function username(): Attribute
+    {
+        return Attribute::set(fn (?string $value) => $value === null ? null : mb_strtolower(trim($value)));
+    }
+
+    /** Дети родителя (аккаунты, которыми он управляет). */
+    public function children(): BelongsToMany
+    {
+        return $this->belongsToMany(self::class, 'parent_child', 'parent_id', 'child_id')->withTimestamps();
+    }
+
+    public function parents(): BelongsToMany
+    {
+        return $this->belongsToMany(self::class, 'parent_child', 'child_id', 'parent_id')->withTimestamps();
     }
 
     public function getAvatarUrlAttribute(): ?string
@@ -102,6 +122,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             : $this->getAllPermissions()->pluck('name');
 
         return [
+            'username' => $this->username,
             'roles' => $this->getRoleNames()->values()->all(),
             'permissions' => $permissions->sort()->values()->all(),
             'teacher_verified' => $this->hasRole(RoleName::teacher->value)

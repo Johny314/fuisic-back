@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use OpenApi\Attributes\Schema;
 use Spatie\LaravelData\Attributes\Hidden;
 
-#[Schema(required: ['name', 'email', 'user_type'])]
+#[Schema(required: ['name', 'user_type'])]
 class User extends Data
 {
     #[Property(readOnly: true, example: '1')]
@@ -18,8 +18,11 @@ class User extends Data
     #[Property(example: 'John Doe')]
     public string $name;
 
-    #[Property(example: 'johndoe@example.com')]
-    public string $email;
+    #[Property(example: 'johndoe@example.com', description: 'null — аккаунт ребёнка со входом по логину')]
+    public ?string $email;
+
+    #[Property(readOnly: true, example: 'masha.petrova')]
+    public ?string $username = null;
 
     #[Hidden]
     #[Property(example: 'password')]
@@ -37,6 +40,13 @@ class User extends Data
 
     #[Property(readOnly: true, example: 'http://localhost:9000/fuisic/avatars/abc.png')]
     public ?string $avatar_url = null;
+
+    public static function rules(): array
+    {
+        return [
+            'email' => ['required', 'string', 'email', 'max:255'],
+        ];
+    }
 
     public static function fromRequest(Request $request): User
     {
