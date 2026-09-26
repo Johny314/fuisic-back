@@ -4,8 +4,8 @@ namespace App\Support;
 
 use App\Enums\PermissionName;
 use App\Enums\RoleName;
+use App\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 /**

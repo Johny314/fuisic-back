@@ -20,4 +20,30 @@ enum PermissionName: string
     case auditView = 'audit.view';
     case childrenManage = 'children.manage';
     case childrenView = 'children.view';
+
+    /** Подпись для админки. */
+    public function label(): string
+    {
+        return match ($this) {
+            self::adminAccess => 'Вход в админку',
+            self::catalogManage => 'Управление каталогом и разделами',
+            self::catalogReview => 'Проверка публикаций в каталог',
+            self::catalogSubmit => 'Публикация в каталог',
+            self::formulasManage => 'Справочник формул',
+            self::usersView => 'Просмотр пользователей',
+            self::usersBlock => 'Блокировка пользователей',
+            self::usersManage => 'Управление пользователями',
+            self::rolesManage => 'Управление ролями и их назначение',
+            self::teachersVerify => 'Проверка заявок учителей',
+            self::auditView => 'Просмотр журнала действий',
+            self::childrenManage => 'Управление аккаунтами детей',
+            self::childrenView => 'Просмотр аккаунтов детей',
+        };
+    }
+
+    /** Подпись права по имени; неизвестное (не из стартового набора) — как есть. */
+    public static function labelFor(string $name): string
+    {
+        return self::tryFrom($name)?->label() ?? $name;
+    }
 }

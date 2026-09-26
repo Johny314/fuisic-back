@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\PermissionName;
 use App\Enums\TeacherVerificationStatus as Status;
 use App\Exceptions\TeacherVerificationConflict;
+use App\Http\Controllers\Admin\Concerns\AuthorizesCrud;
 use App\Models\TeacherVerification;
 use App\Services\TeacherVerificationService;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -21,6 +22,7 @@ use Prologue\Alerts\Facades\Alert;
  */
 class TeacherVerificationCrudController extends CrudController
 {
+    use AuthorizesCrud;
     use ListOperation;
     use ShowOperation;
 
@@ -28,13 +30,11 @@ class TeacherVerificationCrudController extends CrudController
 
     public function setup()
     {
-        // Вход в админку пока только у admin, но сами операции закрыты правом:
-        // после открытия админки модератору (#24) очередь увидят только с teachers.verify
-        abort_unless(backpack_user()?->can(PermissionName::teachersVerify->value), 403);
-
         CRUD::setModel(TeacherVerification::class);
         CRUD::setRoute(config('backpack.base.route_prefix').'/teacher-verification');
         CRUD::setEntityNameStrings('заявка учителя', 'Заявки учителей');
+
+        $this->authorizeCrud(PermissionName::teachersVerify, ['decision']);
     }
 
     protected function setupDecisionRoutes($segment, $routeName, $controller)
@@ -98,6 +98,7 @@ class TeacherVerificationCrudController extends CrudController
 
     public function approve($id): RedirectResponse
     {
+        $this->crud->hasAccessOrFail('decision');
         $data = request()->validate(['reviewer_comment' => ['nullable', 'string', 'max:2000']]);
 
         return $this->decide($id, 'Заявка одобрена, учитель получил право публикации',
@@ -106,6 +107,7 @@ class TeacherVerificationCrudController extends CrudController
 
     public function reject($id): RedirectResponse
     {
+        $this->crud->hasAccessOrFail('decision');
         $data = request()->validate(['reviewer_comment' => ['required', 'string', 'max:2000']]);
 
         return $this->decide($id, 'Заявка отклонена',
@@ -114,6 +116,7 @@ class TeacherVerificationCrudController extends CrudController
 
     public function revoke($id): RedirectResponse
     {
+        $this->crud->hasAccessOrFail('decision');
         $data = request()->validate(['reviewer_comment' => ['required', 'string', 'max:2000']]);
 
         return $this->decide($id, 'Статус «Проверенный учитель» отозван',

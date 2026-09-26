@@ -151,6 +151,20 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         $this->syncRoles([$role]);
     }
 
+    /**
+     * Роли из админки. Пока жив `user_type` (fuisic-back#29), он выводится из ролей:
+     * admin, иначе teacher, иначе student — без хука updated, чтобы не менять роли обратно.
+     *
+     * @param  iterable<Role>  $roles
+     */
+    public function syncRolesWithUserType(iterable $roles): void
+    {
+        $roles = collect($roles);
+
+        $this->syncRoles($roles);
+        $this->forceFill(['user_type' => RoleName::legacyUserTypeFor($roles->pluck('name'))])->saveQuietly();
+    }
+
     public function authProfile(): array
     {
         $permissions = $this->isAdmin()
