@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\PermissionName;
 use App\Enums\RoleName;
-use App\Enums\UserType;
 use App\Models\Concerns\AuditsAdminChanges;
 use App\Services\MediaStorage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
@@ -42,7 +41,6 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         'name',
         'email',
         'password',
-        'user_type',
         'avatar_path',
     ];
 
@@ -58,19 +56,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 
     protected static function booted(): void
     {
-        // Пока жив user_type (до fuisic-back#29), он задаёт одну из ролей admin/teacher/student,
-        // остальные роли (moderator, parent) не трогаются. null — поле не передано в create (в БД default student)
-        static::created(fn (User $user) => $user->assignRole(
-            RoleName::fromUserType($user->user_type ?? UserType::student)->value
-        ));
-
-        static::updated(function (User $user) {
-            if (! $user->wasChanged('user_type')) {
-                return;
+        // Пользователь без роли не остаётся: по умолчанию student, другие роли назначают syncRoles
+        // (регистрация, фабрика, админка) уже после создания
+        static::created(function (User $user) {
+            if ($user->roles()->doesntExist()) {
+                $user->assignRole(RoleName::student->value);
             }
-
-            $user->removeRole(RoleName::fromUserType($user->getOriginal('user_type') ?? UserType::student)->value);
-            $user->assignRole(RoleName::fromUserType($user->user_type)->value);
         });
     }
 
@@ -80,7 +71,6 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             'email_verified_at' => 'datetime',
             // уже захэшированные значения (Hash::make в контроллерах) повторно не хэшируются
             'password' => 'hashed',
-            'user_type' => UserType::class,
             'grade' => 'integer',
         ];
     }
@@ -149,22 +139,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 
     public function assignRegistrationRole(string $role): void
     {
-        $this->forceFill(['user_type' => RoleName::from($role)->legacyUserType()])->saveQuietly();
         $this->syncRoles([$role]);
-    }
-
-    /**
-     * Роли из админки. Пока жив `user_type` (fuisic-back#29), он выводится из ролей:
-     * admin, иначе teacher, иначе student — без хука updated, чтобы не менять роли обратно.
-     *
-     * @param  iterable<Role>  $roles
-     */
-    public function syncRolesWithUserType(iterable $roles): void
-    {
-        $roles = collect($roles);
-
-        $this->syncRoles($roles);
-        $this->forceFill(['user_type' => RoleName::legacyUserTypeFor($roles->pluck('name'))])->saveQuietly();
     }
 
     public function authProfile(): array

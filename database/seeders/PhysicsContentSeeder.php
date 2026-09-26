@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Enums\Classifications;
 use App\Enums\Difficulty;
+use App\Enums\RoleName;
 use App\Enums\Subject;
-use App\Enums\UserType;
 use App\Models\Card\Card;
 use App\Models\Card\CardSet;
 use App\Models\Section;
@@ -18,7 +18,7 @@ class PhysicsContentSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::query()->where('user_type', UserType::admin->value)->first();
+        $admin = User::role(RoleName::admin->value)->orderBy('id')->first();
 
         if (! $admin) {
             $this->command?->warn('Admin not found. Run UserSeeder first.');

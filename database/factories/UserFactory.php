@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Enums\RoleName;
-use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +17,6 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => bcrypt('password'),
-            'user_type' => UserType::student->value,
         ];
     }
 
@@ -59,8 +57,6 @@ class UserFactory extends Factory
 
     public function withRole(RoleName $role): static
     {
-        return $this
-            ->state(['user_type' => $role->legacyUserType()->value])
-            ->afterCreating(fn (User $user) => $user->syncRoles([$role->value]));
+        return $this->afterCreating(fn (User $user) => $user->syncRoles([$role->value]));
     }
 }

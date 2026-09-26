@@ -243,7 +243,6 @@ class ChildrenTest extends TestCase
         $this->putJson("/user/{$child->id}", [
             'name' => 'Новое имя',
             'username' => 'hacker',
-            'user_type' => 'admin',
             'roles' => ['admin'],
             'created_by_id' => null,
             'grade' => 11,

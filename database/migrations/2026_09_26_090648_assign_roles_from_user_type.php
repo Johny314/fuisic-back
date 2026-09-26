@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\UserType;
 use App\Models\User;
 use App\Support\RoleCatalog;
 use Illuminate\Database\Migrations\Migration;
@@ -17,16 +16,17 @@ return new class extends Migration
         $morphType = (new User)->getMorphClass();
         $roleIds = DB::table('roles')->where('guard_name', RoleCatalog::GUARD)->pluck('id', 'name');
 
-        foreach (UserType::cases() as $type) {
+        // значения колонки users.user_type (удалена в fuisic-back#29)
+        foreach (['admin', 'teacher', 'student'] as $type) {
             DB::table('users')
-                ->where('user_type', $type->value)
+                ->where('user_type', $type)
                 ->whereNotExists(fn ($query) => $query->from('model_has_roles')
                     ->whereColumn('model_has_roles.model_id', 'users.id')
                     ->where('model_has_roles.model_type', $morphType))
                 ->orderBy('id')
                 ->chunkById(500, function ($users) use ($roleIds, $type, $morphType) {
                     DB::table('model_has_roles')->insert($users->map(fn ($user) => [
-                        'role_id' => $roleIds[$type->value],
+                        'role_id' => $roleIds[$type],
                         'model_type' => $morphType,
                         'model_id' => $user->id,
                     ])->all());

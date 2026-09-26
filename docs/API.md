@@ -31,7 +31,7 @@ OpenAPI/Swagger: `/api/documentation`
 | PUT | `card_set/{card_set}` | Обновить |
 | DELETE | `card_set/{card_set}` | Удалить |
 | POST/PUT/DELETE | `section`, `section/{section}` | CRUD разделов |
-| POST/PUT/DELETE | `user`, `user/{user}` | CRUD пользователей |
+| POST/PUT/DELETE | `user`, `user/{user}` | CRUD пользователей (`users.manage`); созданный через `POST user` получает роль student, роли меняются только в админке |
 | POST/PUT/DELETE | `card`, `card/{card}` | CRUD карточек |
 | POST/PUT/DELETE | `task`, `task/{task}` | CRUD заданий |
 | POST/PUT/DELETE | `test`, `test/{test}` | CRUD тестов |

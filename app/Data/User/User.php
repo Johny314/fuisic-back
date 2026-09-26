@@ -3,13 +3,11 @@
 namespace App\Data\User;
 
 use App\Data\Data;
-use App\Enums\UserType;
 use App\OpenApi\Property;
-use Illuminate\Http\Request;
 use OpenApi\Attributes\Schema;
 use Spatie\LaravelData\Attributes\Hidden;
 
-#[Schema(required: ['name', 'user_type'])]
+#[Schema(required: ['name'])]
 class User extends Data
 {
     #[Property(readOnly: true, example: '1')]
@@ -28,9 +26,6 @@ class User extends Data
     #[Property(example: 'password')]
     public string $password = '';
 
-    #[Property(example: 'admin')]
-    public ?UserType $user_type;
-
     #[Property(readOnly: true, example: '2024-01-01 12:00:00')]
     public ?string $email_verified_at;
 
@@ -46,13 +41,5 @@ class User extends Data
         return [
             'email' => ['required', 'string', 'email', 'max:255'],
         ];
-    }
-
-    public static function fromRequest(Request $request): User
-    {
-        return static::from([
-            'user_type' => UserType::student->value,
-        ] + $request->toArray()
-        );
     }
 }

@@ -9,6 +9,7 @@ use App\Support\RoleCatalog;
 use Fuisic\Auth\Services\AuthTokenService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Testing\TestResponse;
 use Laravel\Sanctum\Sanctum;
 use Laravel\Socialite\Facades\Socialite;
@@ -76,60 +77,56 @@ class RolesAndPermissionsTest extends TestCase
         $this->assertFalse($moderator->can(PermissionName::auditView->value));
     }
 
-    public function test_data_migration_assigns_roles_by_user_type(): void
+    public function test_user_type_column_is_dropped_and_restored_from_roles_on_rollback(): void
     {
+        $this->assertFalse(Schema::hasColumn('users', 'user_type'));
+
         $admin = User::factory()->admin()->create();
         $teacher = User::factory()->teacher()->create();
+        $adminTeacher = User::factory()->admin()->create();
+        $adminTeacher->assignRole(RoleName::teacher->value);
+        $parent = User::factory()->parent()->create();
         $student = User::factory()->create();
-        $deleted = User::factory()->teacher()->create();
-        $deleted->delete();
-        DB::table('model_has_roles')->delete();
 
-        $migration = require database_path('migrations/2026_09_26_090648_assign_roles_from_user_type.php');
+        $migration = require database_path('migrations/2026_09_26_190000_drop_user_type_from_users.php');
+        $migration->down();
+
+        $types = DB::table('users')->pluck('user_type', 'id');
+        $this->assertSame('admin', $types[$admin->id]);
+        $this->assertSame('teacher', $types[$teacher->id]);
+        $this->assertSame('admin', $types[$adminTeacher->id]);
+        $this->assertSame('student', $types[$parent->id]);
+        $this->assertSame('student', $types[$student->id]);
+
         $migration->up();
-        $migration->up(); // повторный запуск не дублирует роли
-
-        $this->assertSame(['admin'], $admin->fresh()->getRoleNames()->all());
-        $this->assertSame(['teacher'], $teacher->fresh()->getRoleNames()->all());
-        $this->assertSame(['student'], $student->fresh()->getRoleNames()->all());
-        $this->assertSame(['teacher'], User::withTrashed()->find($deleted->id)->getRoleNames()->all());
-        $this->assertSame(4, DB::table('model_has_roles')->count());
+        $this->assertFalse(Schema::hasColumn('users', 'user_type'));
     }
 
-    public function test_changing_user_type_swaps_only_the_legacy_role(): void
-    {
-        $user = User::factory()->parent()->create();
-        $user->assignRole(RoleName::student->value);
-
-        $user->update(['user_type' => 'teacher']);
-
-        $this->assertEqualsCanonicalizing(['parent', 'teacher'], $user->fresh()->getRoleNames()->all());
-    }
-
-    public function test_user_created_without_role_gets_one_from_user_type(): void
+    public function test_user_created_without_role_becomes_student(): void
     {
         $user = User::query()->create(['name' => 'Без роли', 'email' => 'plain@example.com', 'password' => 'x']);
 
         $this->assertSame(['student'], $user->getRoleNames()->all());
     }
 
+    public function test_factory_role_states_give_only_that_role(): void
+    {
+        $this->assertSame(['teacher'], User::factory()->teacher()->create()->getRoleNames()->all());
+        $this->assertSame(['admin'], User::factory()->admin()->create()->getRoleNames()->all());
+    }
+
     #[DataProvider('registrableRoles')]
-    public function test_registration_assigns_chosen_role(string $role, string $userType): void
+    public function test_registration_assigns_chosen_role(string $role): void
     {
         $this->register(['email' => "{$role}@example.com", 'role' => $role])->assertCreated();
 
         $user = User::query()->where('email', "{$role}@example.com")->firstOrFail();
         $this->assertSame([$role], $user->getRoleNames()->all());
-        $this->assertSame($userType, $user->user_type->value);
     }
 
     public static function registrableRoles(): array
     {
-        return [
-            'student' => ['student', 'student'],
-            'teacher' => ['teacher', 'teacher'],
-            'parent' => ['parent', 'student'],
-        ];
+        return ['student' => ['student'], 'teacher' => ['teacher'], 'parent' => ['parent']];
     }
 
     public function test_registration_without_role_makes_a_student(): void
@@ -157,13 +154,13 @@ class RolesAndPermissionsTest extends TestCase
         return ['admin' => ['admin'], 'moderator' => ['moderator']];
     }
 
+    // старые клиенты ещё могут прислать user_type — он не даёт роль
     public function test_legacy_user_type_on_registration_is_ignored(): void
     {
         $this->register(['email' => 'legacy@example.com', 'user_type' => 'admin'])->assertCreated();
 
         $user = User::query()->where('email', 'legacy@example.com')->firstOrFail();
         $this->assertSame(['student'], $user->getRoleNames()->all());
-        $this->assertSame('student', $user->user_type->value);
     }
 
     public function test_new_oauth_user_gets_default_role(): void
@@ -194,6 +191,7 @@ class RolesAndPermissionsTest extends TestCase
 
         $this->getJson('/me')
             ->assertOk()
+            ->assertJsonMissingPath('user_type')
             ->assertJsonPath('roles', ['parent'])
             ->assertJsonPath('permissions', ['children.manage', 'children.view'])
             ->assertJsonPath('teacher_verified', false);

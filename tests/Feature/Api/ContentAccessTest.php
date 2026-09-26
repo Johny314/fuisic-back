@@ -54,8 +54,7 @@ class ContentAccessTest extends TestCase
                 ->assertOk()
                 ->assertJsonPath('data.0.user.name', $this->admin->name)
                 ->assertJsonMissingPath('data.0.user.email')
-                ->assertJsonMissingPath('data.0.user.email_verified_at')
-                ->assertJsonMissingPath('data.0.user.user_type');
+                ->assertJsonMissingPath('data.0.user.email_verified_at');
         }
     }
 

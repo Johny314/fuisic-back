@@ -4,7 +4,6 @@ namespace Tests\Feature\Admin;
 
 use App\Enums\PermissionName;
 use App\Enums\RoleName;
-use App\Enums\UserType;
 use App\Models\Role;
 use App\Models\User;
 use App\Support\RoleCatalog;
@@ -189,14 +188,13 @@ class RoleAdminTest extends TestCase
         $this->assertCount(0, $role->fresh()->permissions);
     }
 
-    public function test_admin_assigns_several_roles_and_user_type_follows_main_role(): void
+    public function test_admin_assigns_several_roles(): void
     {
         $user = User::factory()->create();
 
         $this->asAdmin()->get("/admin/user/{$user->id}/edit")
             ->assertOk()
-            ->assertSee('name="role_ids[]"', false)
-            ->assertDontSee('name="user_type"', false);
+            ->assertSee('name="role_ids[]"', false);
 
         $assign = fn (array $roles) => $this->asAdmin()->put("/admin/user/{$user->id}", [
             'id' => $user->id,
@@ -207,14 +205,11 @@ class RoleAdminTest extends TestCase
 
         $assign([RoleName::teacher, RoleName::parent]);
         $this->assertEqualsCanonicalizing(['teacher', 'parent'], $user->fresh()->getRoleNames()->all());
-        $this->assertSame(UserType::teacher, $user->fresh()->user_type);
 
         $assign([RoleName::parent]);
         $this->assertSame(['parent'], $user->fresh()->getRoleNames()->all());
-        $this->assertSame(UserType::student, $user->fresh()->user_type);
 
         $assign([RoleName::admin, RoleName::teacher]);
-        $this->assertSame(UserType::admin, $user->fresh()->user_type);
         $this->assertTrue($user->fresh()->isAdmin());
     }
 
@@ -243,7 +238,6 @@ class RoleAdminTest extends TestCase
 
         $user = User::query()->where('email', 'new-moderator@example.com')->firstOrFail();
         $this->assertSame(['moderator'], $user->getRoleNames()->all());
-        $this->assertSame(UserType::student, $user->user_type);
     }
 
     public function test_admin_cannot_remove_own_admin_role(): void
@@ -292,7 +286,6 @@ class RoleAdminTest extends TestCase
             'role_ids' => [self::roleId(RoleName::teacher)],
         ])->assertSessionHasNoErrors();
         $this->assertSame(['teacher'], $student->fresh()->getRoleNames()->all());
-        $this->assertSame(UserType::teacher, $student->fresh()->user_type);
 
         // администратора не-админ не редактирует вовсе
         $this->actingAs($manager, 'backpack')->get("/admin/user/{$this->admin->id}/edit")->assertForbidden();
