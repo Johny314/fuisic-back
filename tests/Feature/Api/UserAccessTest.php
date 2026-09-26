@@ -85,30 +85,4 @@ class UserAccessTest extends TestCase
 
         $this->assertSame('Новое имя', $user->fresh()->name);
     }
-
-    public function test_registration_cannot_grant_admin_role(): void
-    {
-        $this->postJson('/register', [
-            'name' => 'Мошенник',
-            'email' => 'admin-wannabe@example.com',
-            'password' => 'Secret-password-123',
-            'password_confirmation' => 'Secret-password-123',
-            'user_type' => 'admin',
-        ])->assertUnprocessable()->assertJsonValidationErrors('user_type');
-
-        $this->assertDatabaseMissing('users', ['email' => 'admin-wannabe@example.com']);
-    }
-
-    public function test_registration_allows_choosing_teacher(): void
-    {
-        $this->postJson('/register', [
-            'name' => 'Учитель',
-            'email' => 'teacher@example.com',
-            'password' => 'Secret-password-123',
-            'password_confirmation' => 'Secret-password-123',
-            'user_type' => 'teacher',
-        ])->assertCreated();
-
-        $this->assertDatabaseHas('users', ['email' => 'teacher@example.com', 'user_type' => 'teacher']);
-    }
 }

@@ -16,6 +16,16 @@ class UserSeeder extends Seeder
             'user_type' => UserType::admin->value,
         ]);
 
+        User::factory()->moderator()->create([
+            'name' => 'Модератор',
+            'email' => 'moderator@fuisic.local',
+        ]);
+
+        User::factory()->parent()->create([
+            'name' => 'Ольга Петрова',
+            'email' => 'parent@fuisic.local',
+        ]);
+
         User::factory()->create([
             'name' => 'Пётр Иванов',
             'email' => 'teacher@fuisic.local',

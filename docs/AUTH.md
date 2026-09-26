@@ -30,7 +30,7 @@ use Laravel\Passkeys\Contracts\PasskeyUser;
 
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
-    use HasApiTokens, HasFuisicAuth;
+    use HasApiTokens, HasFuisicAuth, HasRoles;
 }
 ```
 
@@ -38,7 +38,8 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 
 Файл `config/fuisic-auth.php` расширяет базовый config пакета:
 
-- `register.validation` / `fillable` / `defaults` — поле `user_type` (enum `UserType`)
+- `register.roles` — роли на выбор при регистрации (`student`, `teacher`, `parent` из `App\Enums\RoleName::REGISTRABLE`), `register.default_role` — `student`; admin и moderator назначаются только вручную
+- `register.defaults` — `user_type = student` (устаревшее поле, удаляется в fuisic-back#29)
 - включение OAuth-провайдеров через env
 - `passkeys.relying_party` для WebAuthn
 
@@ -106,6 +107,14 @@ FUISIC_AUTH_PASSKEY_RP_ID=localhost
 ```
 
 Фронтенд вызывает `/passkeys/login/options` → WebAuthn API → `/passkeys/login` с `{ credential }`. Origin берётся из `FRONTEND_URL` и `APP_URL`.
+
+## Роли и права
+
+- [spatie/laravel-permission](https://spatie.be/docs/laravel-permission) 8.x, guard `web` для API и админки (`User::$guard_name`).
+- Стартовые роли и права — `App\Enums\RoleName`, `App\Enums\PermissionName`; создаёт их `App\Support\RoleCatalog::install()` (миграция и `RoleSeeder`). Повторный запуск добавляет недостающее и не трогает права существующих ролей — их меняют в админке.
+- admin — суперадмин через `Gate::before` (`AppServiceProvider`), прав в роли не хранит.
+- Пока жив `user_type`, модель держит соответствующую роль admin/teacher/student (хуки `created`/`updated` в `User`); moderator и parent назначаются только ролью.
+- `GET /me` дополнительно отдаёт `roles`, `permissions` (у admin — все) и `teacher_verified` (роль teacher и право `catalog.submit`) — `User::authProfile()`.
 
 ## Admin (Backpack)
 

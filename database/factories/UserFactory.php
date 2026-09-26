@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\RoleName;
 use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,10 +22,30 @@ class UserFactory extends Factory
         ];
     }
 
-    public function admin(): UserFactory
+    public function admin(): static
     {
-        return $this->state([
-            'user_type' => UserType::admin->value,
-        ]);
+        return $this->withRole(RoleName::admin);
+    }
+
+    public function teacher(): static
+    {
+        return $this->withRole(RoleName::teacher);
+    }
+
+    public function moderator(): static
+    {
+        return $this->withRole(RoleName::moderator);
+    }
+
+    public function parent(): static
+    {
+        return $this->withRole(RoleName::parent);
+    }
+
+    public function withRole(RoleName $role): static
+    {
+        return $this
+            ->state(['user_type' => $role->legacyUserType()->value])
+            ->afterCreating(fn (User $user) => $user->syncRoles([$role->value]));
     }
 }
