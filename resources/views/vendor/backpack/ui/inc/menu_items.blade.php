@@ -17,3 +17,6 @@
 @if ($can(\App\Enums\PermissionName::teachersVerify))
     <x-backpack::menu-item title="Заявки учителей" icon="la la-user-check" :link="backpack_url('teacher-verification')" />
 @endif
+@if ($can(\App\Enums\PermissionName::auditView))
+    <x-backpack::menu-item title="Журнал действий" icon="la la-history" :link="backpack_url('audit-log')" />
+@endif

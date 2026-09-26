@@ -2,6 +2,7 @@
 
 namespace App\Models\Test;
 
+use App\Models\Concerns\AuditsAdminChanges;
 use App\Models\Section;
 use App\Models\User;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Test extends Model
 {
+    use AuditsAdminChanges;
     use CrudTrait;
     use HasFactory, SoftDeletes;
 

@@ -47,14 +47,15 @@ class AdminAccessTest extends TestCase
             ->assertSee(backpack_url('card-set'), false)
             ->assertSee(backpack_url('test'), false)
             ->assertDontSee(backpack_url('role'), false)
-            ->assertDontSee(backpack_url('teacher-verification'), false);
+            ->assertDontSee(backpack_url('teacher-verification'), false)
+            ->assertDontSee(backpack_url('audit-log'), false);
     }
 
     public function test_admin_sees_every_section_in_menu(): void
     {
         $response = $this->actingAs($this->admin, 'backpack')->get('/admin/dashboard')->assertOk();
 
-        foreach (['user', 'role', 'section', 'card-set', 'test', 'teacher-verification'] as $segment) {
+        foreach (['user', 'role', 'section', 'card-set', 'test', 'teacher-verification', 'audit-log'] as $segment) {
             $response->assertSee(backpack_url($segment), false);
         }
     }
@@ -81,7 +82,7 @@ class AdminAccessTest extends TestCase
             ->assertDontSee(backpack_url('user'), false)
             ->assertDontSee(backpack_url('section'), false);
 
-        foreach (['/admin/section', '/admin/card-set', '/admin/test', '/admin/user', '/admin/role', '/admin/teacher-verification'] as $url) {
+        foreach (['/admin/section', '/admin/card-set', '/admin/test', '/admin/user', '/admin/role', '/admin/teacher-verification', '/admin/audit-log'] as $url) {
             $this->actingAs($staff, 'backpack')->get($url)->assertForbidden();
         }
     }

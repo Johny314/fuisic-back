@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\PermissionName;
 use App\Enums\RoleName;
+use App\Models\Concerns\AuditsAdminChanges;
 use App\Services\MediaStorage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Fuisic\Auth\Traits\HasFuisicAuth;
@@ -24,6 +25,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
+    use AuditsAdminChanges;
     use CrudTrait;
     use HasApiTokens;
     use HasFactory;

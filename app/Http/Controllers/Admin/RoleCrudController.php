@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\AuditEvent;
 use App\Enums\PermissionName;
 use App\Http\Controllers\Admin\Concerns\AuthorizesCrud;
 use App\Http\Requests\RoleRequest;
 use App\Models\Role;
+use App\Services\AuditLog;
 use App\Support\RoleCatalog;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -168,8 +170,12 @@ class RoleCrudController extends CrudController
         }
 
         $ids = array_filter((array) $this->crud->getRequest()->input(self::PERMISSIONS, []));
+        $before = $role->permissions()->pluck('name');
         $role->syncPermissions(Permission::query()->where('guard_name', RoleCatalog::GUARD)->whereKey($ids)->get());
         // изменения прав сразу действуют в API
         app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        app(AuditLog::class)->recordSetChange(AuditEvent::rolePermissions, $role, backpack_user(),
+            'permissions', $before, $role->permissions()->pluck('name'));
     }
 }
