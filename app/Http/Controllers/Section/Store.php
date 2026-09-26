@@ -9,8 +9,8 @@ use App\OpenApi\Post;
 use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
-use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class Store extends Controller
 {
@@ -24,7 +24,7 @@ class Store extends Controller
     #[Response(201, Data::class)]
     public function __invoke(Data $data): Data
     {
-        ContentAccess::abortUnlessAdmin();
+        Gate::authorize('create', Section::class);
 
         $section = Section::query()->create($data->toArray());
 

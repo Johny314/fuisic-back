@@ -11,8 +11,8 @@ use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
 use App\Services\MediaStorage;
-use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class Update extends Controller
 {
@@ -27,7 +27,7 @@ class Update extends Controller
     #[Response(200, Data::class)]
     public function __invoke(CardSet $card_set, Data $data, MediaStorage $media): Data
     {
-        ContentAccess::abortUnlessCanManageCardSet($card_set);
+        Gate::authorize('update', $card_set);
 
         $payload = $data->persistAttributes();
         if (array_key_exists('logo_path', $payload) && $payload['logo_path'] !== $card_set->logo_path) {
