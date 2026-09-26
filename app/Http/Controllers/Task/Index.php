@@ -36,7 +36,7 @@ class Index extends Controller
     {
         $user = ContentAccess::requireUser();
         $query = TaskModel::query()->whereHas('test', function ($testQuery) use ($user) {
-            if (! ContentAccess::isAdmin($user)) {
+            if (! $user->isAdmin()) {
                 $testQuery->where('user_id', $user->id);
             }
         });

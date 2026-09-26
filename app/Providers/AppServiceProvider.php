@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,5 +18,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // admin — суперадмин: любые права и политики, без записи прав в роль
         Gate::before(fn ($user) => $user instanceof User && $user->isAdmin() ? true : null);
+
+        // Отказ политики без своего сообщения
+        Gate::defaultDenialResponse(Response::deny('Недостаточно прав'));
     }
 }

@@ -10,9 +10,9 @@ use App\OpenApi\Response\NotFound;
 use App\OpenApi\Response\Ok;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
-use App\Support\ContentAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class Destroy extends Controller
 {
@@ -28,7 +28,7 @@ class Destroy extends Controller
     public function __invoke(Card $card): JsonResponse
     {
         $card->loadMissing('cardSet');
-        ContentAccess::abortUnlessCanManageCardSet($card->cardSet);
+        Gate::authorize('delete', $card);
         $card->delete();
 
         return new JsonResponse;

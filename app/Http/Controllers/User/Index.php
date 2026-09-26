@@ -15,6 +15,7 @@ use App\OpenApi\Tag;
 use App\Support\ContentAccess;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 use Spatie\LaravelData\PaginatedDataCollection;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -33,7 +34,7 @@ class Index extends Controller
     #[IndexPaginatedResponse(User::class, description: 'Список пользователей')]
     public function __invoke(Request $request): PaginatedDataCollection
     {
-        ContentAccess::abortUnlessAdmin();
+        Gate::forUser(ContentAccess::requireUser())->authorize('viewAny', User::class);
 
         $models = QueryBuilder::for(User::query())
             ->allowedSorts(...['id', 'name'])

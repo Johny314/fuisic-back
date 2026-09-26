@@ -10,8 +10,8 @@ use App\OpenApi\Post;
 use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
-use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class Store extends Controller
 {
@@ -26,7 +26,7 @@ class Store extends Controller
     public function __invoke(Data $data): Data
     {
         $set = CardSet::query()->findOrFail($data->card_set_id);
-        ContentAccess::abortUnlessCanManageCardSet($set);
+        Gate::authorize('create', [Card::class, $set]);
 
         $card = Card::query()->create($data->persistAttributes());
 

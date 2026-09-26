@@ -2,12 +2,14 @@
 
 namespace App\Support;
 
-use App\Enums\UserType;
-use App\Models\Card\CardSet;
-use App\Models\Test\Test;
+use App\Enums\PermissionName;
+use App\Enums\RoleName;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Скоупы видимости материалов в списках. Проверки доступа к конкретной записи — политики в `App\Policies`.
+ */
 final class ContentAccess
 {
     public static function user(): ?User
@@ -25,97 +27,12 @@ final class ContentAccess
         return $user;
     }
 
-    public static function isAdmin(?User $user = null): bool
+    /**
+     * Каталог: материалы администраторов.
+     */
+    public static function applyCatalogScope(Builder $query): void
     {
-        $user ??= self::user();
-
-        return $user?->user_type === UserType::admin;
-    }
-
-    public static function abortUnlessAdmin(): User
-    {
-        $user = self::requireUser();
-        abort_unless(self::isAdmin($user), 403, 'Недостаточно прав');
-
-        return $user;
-    }
-
-    public static function abortUnlessCanManageUser(User $target): User
-    {
-        $user = self::requireUser();
-        abort_unless(
-            self::isAdmin($user) || (int) $target->id === (int) $user->id,
-            403,
-            'Недостаточно прав'
-        );
-
-        return $user;
-    }
-
-    public static function canManageCardSet(CardSet $set, ?User $user = null): bool
-    {
-        $user ??= self::user();
-        if (! $user) {
-            return false;
-        }
-
-        return self::isAdmin($user) || (int) $set->user_id === (int) $user->id;
-    }
-
-    public static function canViewCardSet(CardSet $set, ?User $user = null): bool
-    {
-        $set->loadMissing('user');
-        if ($set->user?->user_type === UserType::admin) {
-            return true;
-        }
-
-        return self::canManageCardSet($set, $user);
-    }
-
-    public static function abortUnlessCanManageCardSet(CardSet $set): User
-    {
-        $user = self::requireUser();
-        abort_unless(self::canManageCardSet($set, $user), 403, 'Недостаточно прав');
-
-        return $user;
-    }
-
-    public static function abortUnlessCanViewCardSet(CardSet $set): void
-    {
-        abort_unless(self::canViewCardSet($set), 403, 'Набор недоступен');
-    }
-
-    public static function canManageTest(Test $test, ?User $user = null): bool
-    {
-        $user ??= self::user();
-        if (! $user) {
-            return false;
-        }
-
-        return self::isAdmin($user) || (int) $test->user_id === (int) $user->id;
-    }
-
-    public static function canViewTest(Test $test, ?User $user = null): bool
-    {
-        $test->loadMissing('user');
-        if ($test->user?->user_type === UserType::admin) {
-            return true;
-        }
-
-        return self::canManageTest($test, $user);
-    }
-
-    public static function abortUnlessCanManageTest(Test $test): User
-    {
-        $user = self::requireUser();
-        abort_unless(self::canManageTest($test, $user), 403, 'Недостаточно прав');
-
-        return $user;
-    }
-
-    public static function abortUnlessCanViewTest(Test $test): void
-    {
-        abort_unless(self::canViewTest($test), 403, 'Тест недоступен');
+        $query->whereHas('user', fn (Builder $owner) => $owner->role(RoleName::admin->value));
     }
 
     /**
@@ -125,16 +42,37 @@ final class ContentAccess
     {
         $user = self::user();
 
-        if (self::isAdmin($user)) {
+        if ($user?->isAdmin()) {
             return;
         }
 
         $query->where(function (Builder $visible) use ($user, $ownerColumn) {
-            $visible->whereHas('user', fn (Builder $owner) => $owner->where('user_type', UserType::admin));
+            self::applyCatalogScope($visible);
 
             if ($user) {
                 $visible->orWhere($ownerColumn, $user->id);
             }
+        });
+    }
+
+    /**
+     * Контент, который пользователь может редактировать: свой, каталог — с правом catalog.manage; админ — всё.
+     */
+    public static function applyEditableScope(Builder $query, User $user, string $ownerColumn = 'user_id'): void
+    {
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        if (! $user->can(PermissionName::catalogManage->value)) {
+            $query->where($ownerColumn, $user->id);
+
+            return;
+        }
+
+        $query->where(function (Builder $editable) use ($user, $ownerColumn) {
+            $editable->where($ownerColumn, $user->id);
+            $editable->orWhere(fn (Builder $catalog) => self::applyCatalogScope($catalog));
         });
     }
 
@@ -152,13 +90,11 @@ final class ContentAccess
 
         if ($scope === 'studio') {
             abort_unless($user, 401, 'Требуется авторизация');
-            if (! self::isAdmin($user)) {
-                $query->where($ownerColumn, $user->id);
-            }
+            self::applyEditableScope($query, $user, $ownerColumn);
 
             return;
         }
 
-        $query->whereHas('user', fn (Builder $owner) => $owner->where('user_type', UserType::admin));
+        self::applyCatalogScope($query);
     }
 }
