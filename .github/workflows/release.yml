@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      # Открывает/обновляет PR «chore(main): release X.Y.Z» по conventional commits;
+      # после его merge создаёт тег и GitHub Release.
+      - uses: googleapis/release-please-action@v5
+        id: release
+
+      # PR от GITHUB_TOKEN не запускает CI, а без проверок защита main не даст его смержить.
+      # workflow_dispatch от GITHUB_TOKEN разрешён — запускаем CI на ветке релизного PR.
+      - name: Run CI on the release PR
+        if: steps.release.outputs.prs_created == 'true' && hashFiles('.github/workflows/ci.yml') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+        run: gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$BRANCH"

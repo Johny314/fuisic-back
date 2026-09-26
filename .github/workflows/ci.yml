@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # запуск из release.yml для релизных PR (их открывает GITHUB_TOKEN)
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
