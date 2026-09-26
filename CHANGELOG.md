@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.1](https://github.com/Johny314/fuisic-back/compare/v3.7.0...v3.7.1) (2026-09-26)
+
+
+### Исправления
+
+* keep the admin panel session with Laravel 13 password hashes ([8aaf1ed](https://github.com/Johny314/fuisic-back/commit/8aaf1ed670909f32e175164d8fa9263a7329408a))
+
 ## [3.7.0](https://github.com/Johny314/fuisic-back/compare/v3.6.0...v3.7.0) (2026-09-26)
 
 
