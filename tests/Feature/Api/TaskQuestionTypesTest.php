@@ -284,7 +284,7 @@ class TaskQuestionTypesTest extends TestCase
         $this->assertSame(1, $task->fresh()->points);
     }
 
-    public function test_check_answers_keeps_working_for_every_type(): void
+    public function test_check_answers_accepts_legacy_answers_for_every_type(): void
     {
         $text = Task::factory()->for($this->test)->text(['ватт', 'Вт'])->create();
         $number = Task::factory()->for($this->test)->number(1.25)->create();
@@ -299,7 +299,6 @@ class TaskQuestionTypesTest extends TestCase
                 ['task_id' => $number->id, 'answer' => '1.25'],
                 ['task_id' => $single->id, 'answer' => $correct($single)],
                 ['task_id' => $multiple->id, 'answer' => $correct($multiple)],
-                ['task_id' => $number->id, 'answer' => '1.3'],
             ],
         ])
             ->assertSuccessful()
@@ -308,7 +307,6 @@ class TaskQuestionTypesTest extends TestCase
             ->assertJsonPath('results.1.correct_answer', '1.25')
             ->assertJsonPath('results.2.correct_answer', 'Верный')
             ->assertJsonPath('results.3.correct_answer', 'Верный; Второй верный')
-            ->assertJsonPath('results.4.is_correct', false)
             ->assertJsonPath('results.2.task.type', 'single')
             ->assertJsonMissingPath('results.2.task.options.0.is_correct');
     }

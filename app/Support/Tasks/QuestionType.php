@@ -70,8 +70,42 @@ abstract class QuestionType
     abstract public function answer(Task $task): ?string;
 
     /**
-     * Ответ-строка из `POST /test/{test}/answers`. Временная проверка «как раньше» — полноценную
-     * (регистр, допуск, единицы, частичные баллы) добавит fuisic-back#61.
+     * Правила полей ответа этого типа в `POST /test/{test}/answers` (ключи — от элемента `answers[]`).
+     * Устаревшее поле `answer` (строка, клиенты до fuisic-front#29) общее для всех типов.
+     *
+     * @return array<string, mixed>
      */
-    abstract public function matches(Task $task, ?string $answer): bool;
+    public function answerRules(): array
+    {
+        return [];
+    }
+
+    /**
+     * Проверка ответа на вопрос: элемент `answers[]` — `task_id`, поля типа или `answer`.
+     *
+     * @param  array<string, mixed>  $answer
+     */
+    abstract public function check(Task $task, array $answer): AnswerCheck;
+
+    /**
+     * Ответ ученика строкой — поле `answer` в результате проверки.
+     *
+     * @param  array<string, mixed>  $answer
+     */
+    public function answerText(array $answer): ?string
+    {
+        return self::legacyAnswer($answer);
+    }
+
+    /**
+     * Устаревшее поле `answer` строкой (число тоже принимается).
+     *
+     * @param  array<string, mixed>  $answer
+     */
+    public static function legacyAnswer(array $answer): ?string
+    {
+        $value = $answer['answer'] ?? null;
+
+        return is_scalar($value) && ! is_bool($value) ? (string) $value : null;
+    }
 }

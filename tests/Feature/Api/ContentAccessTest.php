@@ -137,6 +137,7 @@ class ContentAccessTest extends TestCase
         ])
             ->assertSuccessful()
             ->assertJsonPath('total_score', 1)
+            ->assertJsonPath('max_score', 2)
             ->assertJsonPath('results.0.is_correct', true)
             ->assertJsonPath('results.1.is_correct', false);
     }
@@ -168,6 +169,8 @@ class ContentAccessTest extends TestCase
             ->assertSuccessful()
             ->assertJsonPath('results.0.task', null)
             ->assertJsonPath('results.0.correct_answer', null)
-            ->assertJsonPath('results.0.is_correct', false);
+            ->assertJsonPath('results.0.is_correct', false)
+            ->assertJsonPath('results.0.max_score', 0)
+            ->assertJsonPath('max_score', 0);
     }
 }
