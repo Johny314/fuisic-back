@@ -7,6 +7,7 @@ use App\Enums\RoleName;
 use App\Models\Concerns\AuditsAdminChanges;
 use App\Services\MediaStorage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Fuisic\Auth\Services\EmailVerificationService;
 use Fuisic\Auth\Traits\HasFuisicAuth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Passkeys\Contracts\PasskeyUser;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Permission;
@@ -61,6 +63,21 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         static::created(function (User $user) {
             if ($user->roles()->doesntExist()) {
                 $user->assignRole(RoleName::student->value);
+            }
+        });
+
+        // Новый email (профиль, админка, первый email ребёнка) не подтверждён, пока не придёт письмо.
+        // Явно заданный в том же сохранении email_verified_at не трогаем.
+        static::updating(function (User $user) {
+            if ($user->isDirty('email') && ! $user->isDirty('email_verified_at')) {
+                $user->email_verified_at = null;
+            }
+        });
+
+        // письмо — после фиксации транзакции, чтобы job не прочитал старый email
+        static::updated(function (User $user) {
+            if ($user->wasChanged('email')) {
+                DB::afterCommit(fn () => app(EmailVerificationService::class)->send($user));
             }
         });
     }
