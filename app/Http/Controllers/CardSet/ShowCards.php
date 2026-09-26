@@ -14,6 +14,7 @@ use App\Support\ContentAccess;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class ShowCards extends Controller
 {
@@ -28,7 +29,7 @@ class ShowCards extends Controller
     #[Response(404, NotFound::class)]
     public function __invoke(Request $request, CardSet $card_set): Collection
     {
-        ContentAccess::abortUnlessCanViewCardSet($card_set);
+        Gate::forUser(ContentAccess::user())->authorize('view', $card_set);
 
         $cards = $card_set->cards();
         if ($request->boolean('ordered')) {

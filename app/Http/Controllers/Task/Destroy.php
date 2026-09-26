@@ -10,9 +10,9 @@ use App\OpenApi\Response\NotFound;
 use App\OpenApi\Response\Ok;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
-use App\Support\ContentAccess;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class Destroy extends Controller
 {
@@ -28,7 +28,7 @@ class Destroy extends Controller
     public function __invoke(Task $task): JsonResponse
     {
         $task->loadMissing('test');
-        ContentAccess::abortUnlessCanManageTest($task->test);
+        Gate::authorize('delete', $task);
         $task->delete();
 
         return new JsonResponse;

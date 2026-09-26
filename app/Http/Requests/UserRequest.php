@@ -29,8 +29,20 @@ class UserRequest extends FormRequest
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->route('id'))],
             // при редактировании пустой пароль = оставить прежний (см. UserCrudController::update)
             'password' => [$this->route('id') ? 'nullable' : 'required', 'string', 'min:8'],
-            'user_type' => ['required', Rule::enum(UserType::class)],
+            'user_type' => ['required', Rule::enum(UserType::class)->only(self::assignableUserTypes())],
         ];
+    }
+
+    /**
+     * Роль admin выдаёт только admin.
+     *
+     * @return list<UserType>
+     */
+    public static function assignableUserTypes(): array
+    {
+        return backpack_user()?->isAdmin()
+            ? UserType::cases()
+            : array_values(array_filter(UserType::cases(), fn (UserType $type) => $type !== UserType::admin));
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PermissionName;
+use App\Http\Controllers\Admin\Concerns\AuthorizesCrud;
 use App\Http\Requests\SectionRequest;
 use App\Models\Section;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -20,6 +22,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class SectionCrudController extends CrudController
 {
+    use AuthorizesCrud;
     use CreateOperation;
     use DeleteOperation;
     use ListOperation;
@@ -36,6 +39,8 @@ class SectionCrudController extends CrudController
         CRUD::setModel(Section::class);
         CRUD::setRoute(config('backpack.base.route_prefix').'/section');
         CRUD::setEntityNameStrings('Раздел', 'Разделы');
+
+        $this->authorizeCrud(PermissionName::catalogManage);
     }
 
     /**
