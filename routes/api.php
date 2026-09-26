@@ -8,6 +8,7 @@ use App\Http\Controllers\Child;
 use App\Http\Controllers\File\Store;
 use App\Http\Controllers\Filters;
 use App\Http\Controllers\Section;
+use App\Http\Controllers\Settings;
 use App\Http\Controllers\Task;
 use App\Http\Controllers\TeacherVerification;
 use App\Http\Controllers\Test;
@@ -45,6 +46,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get(Uri::teacher_verification->value, TeacherVerification\Show::class);
     Route::post(Uri::teacher_verification->value, TeacherVerification\Store::class);
+
+    // Только свои настройки: id в URI нет
+    Route::get(Uri::settings->value, Settings\Show::class);
+    Route::put(Uri::settings->value, Settings\Update::class);
 
     // Аккаунты детей родителя; чужой ребёнок — 404
     Route::middleware('can:'.PermissionName::childrenView->value)->group(function () {
