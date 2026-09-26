@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\AuditEvent;
 use App\Enums\PermissionName;
 use App\Enums\RoleName;
 use App\Enums\TeacherVerificationStatus as Status;
@@ -16,9 +17,12 @@ use Illuminate\Support\Facades\DB;
 /**
  * Заявки на «Проверенного учителя»: подача учителем и решения проверяющего.
  * Одобрение выдаёт пользователю прямое право catalog.submit, отзыв — забирает.
+ * Решения пишутся в журнал действий.
  */
 class TeacherVerificationService
 {
+    public function __construct(private readonly AuditLog $audit) {}
+
     public function abortUnlessTeacher(User $user): void
     {
         abort_unless($user->hasRole(RoleName::teacher->value), 403, 'Доступно только учителям');
@@ -80,6 +84,8 @@ class TeacherVerificationService
                 );
             }
 
+            $before = $locked->only(['status', 'reviewer_comment']);
+
             $locked->forceFill([
                 'status' => $to,
                 'reviewer_id' => $reviewer->id,
@@ -90,6 +96,19 @@ class TeacherVerificationService
             if ($locked->user && $applyToUser) {
                 $applyToUser($locked->user);
             }
+
+            $this->audit->record(
+                match ($to) {
+                    Status::approved => AuditEvent::teacherApproved,
+                    Status::rejected => AuditEvent::teacherRejected,
+                    Status::revoked => AuditEvent::teacherRevoked,
+                },
+                $locked,
+                $reviewer,
+                old: ['status' => $before['status']->value, 'reviewer_comment' => $before['reviewer_comment']],
+                new: ['status' => $to->value, 'reviewer_comment' => $locked->reviewer_comment],
+                properties: ['user_id' => $locked->user_id],
+            );
 
             // afterCommit: письмо уйдёт в очередь только после фиксации решения
             $locked->user?->notify(new TeacherVerificationDecided($to, $locked->reviewer_comment));

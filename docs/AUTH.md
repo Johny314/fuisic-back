@@ -167,13 +167,32 @@ FUISIC_AUTH_PASSKEY_RP_ID=localhost
   | Роли | `roles.manage` |
   | Разделы, наборы карточек, тесты | `catalog.manage` |
   | Заявки учителей | `teachers.verify` |
+  | Журнал действий (только просмотр) | `audit.view` |
 
-  Модератор по умолчанию видит пользователей (без изменения), блокировку не-персонала и каталог; ролей и очереди учителей не видит.
+  Модератор по умолчанию видит пользователей (без изменения), блокировку не-персонала и каталог; ролей, очереди учителей и журнала не видит.
 - **Роли** (`RoleCrudController`, `/admin/role`): название (латиница, идентификатор в `GET /me` → `roles`) и права галочками — все записи таблицы `permissions` с русскими подписями. Стартовые роли (`RoleName`) нельзя удалить и переименовать — даже admin; роль admin прав не хранит, в форме вместо галочек — пометка «суперадмин». Права сохраняются через `syncPermissions()` со сбросом кэша spatie — изменения сразу действуют в API.
 - **Назначение ролей** — в карточке пользователя (`UserCrudController`, поле «Роли», несколько ролей): видно и принимается только с `roles.manage` (`users.manage` без него меняет пользователя, но не роли — поле `role_ids` запрещено валидацией). Роль admin выдаёт только admin; снять admin с себя нельзя; нужна хотя бы одна роль. Поля `user_type` в форме нет — он выводится из ролей.
 - Email в форме пользователя обязателен, только если у него нет `username` (аккаунт ребёнка).
 
 API (`routes/api.php`) подключён группой `api` без префикса: без сессий и CSRF, авторизация только Bearer-токеном.
+
+## Журнал действий
+
+[spatie/laravel-activitylog](https://spatie.be/docs/laravel-activitylog) 5.x, таблица `activity_log` (миграция в `database/migrations`, настройки — `config/activitylog.php`), модель `App\Models\Activity`. Запись: кто (`causer`, `null` — «система»), действие (`event`, `App\Enums\AuditEvent`), над чем (`subject`), «было / стало» (`attribute_changes` = `{old, attributes}`), доп. данные (`properties`), IP (`ip_address`, из запроса; в консоли — `null`), время (`created_at`). Все записи — `log_name = audit`.
+
+| Действие (`event`) | Где пишется | Объект | Было / стало |
+|---|---|---|---|
+| `created`, `updated`, `deleted` | CRUD админки: разделы, наборы, тесты, пользователи, роли (`App\Models\Concerns\AuditsAdminChanges`) | запись | изменённые поля |
+| `role_permissions` | `RoleCrudController` (`syncPermissions`) | роль | `permissions`; в `properties` — `added` / `removed` |
+| `user_roles` | `UserCrudController` (`syncRolesWithUserType`) | пользователь | `roles` |
+| `blocked`, `unblocked` | `App\Services\UserBlocking` (в т.ч. `users:unblock-expired` — автор «система», `properties.expired = true`) | пользователь | `reason`, `comment`, `until` / `unblocked_at` |
+| `teacher_approved`, `teacher_rejected`, `teacher_revoked` | `App\Services\TeacherVerificationService` | заявка учителя | `status`, `reviewer_comment`; в `properties` — `user_id` |
+
+- Изменения записей пишутся **только из админки**: middleware `App\Http\Middleware\RecordAdminActivity` (последний в `backpack.base.middleware_class`) включает запись и задаёт автора через `App\Services\AuditLog::asStaff()`. Действия обычных пользователей через API (свои наборы, профиль), сидеры и миграции в журнал не попадают. Сервисы блокировки и заявок пишут всегда, автор — явно.
+- Секреты не пишутся: `password`, `remember_token` и др. (`activitylog.default_except_attributes`); их изменение отмечается значением `(скрыто)`. `id` и метки времени записи не логируются.
+- Новая модель в админке → `use AuditsAdminChanges;` и тип в `AuditLog::SUBJECTS` (подпись и фильтр); новое действие сервиса → случай `AuditEvent` и `AuditLog::record()` / `recordSetChange()`.
+- Экран `/admin/audit-log` (`AuditLogCrudController`): только список и просмотр — маршрутов создания, изменения и удаления нет. Фильтры — GET-параметры над таблицей (их получает и поиск таблицы): `causer` (id пользователя или `system`), `event`, `subject` (`user`, `role`, `section`, `card-set`, `test`, `teacher-verification`), `subject_id`, `from` / `to` (`Y-m-d`).
+- Хранение 12 месяцев: `activitylog:clean --force` ежедневно (`routes/console.php`) удаляет записи старше `activitylog.clean_after_days = 365`.
 
 ## Миграции пакета
 
@@ -186,6 +205,7 @@ API (`routes/api.php`) подключён группой `api` без префи
 
 - `personal_access_tokens` (Sanctum)
 - `passkeys` (`vendor:publish --tag=passkeys-migrations`, уже в `database/migrations`)
+- `activity_log` — журнал действий (`vendor:publish --tag=activitylog-migrations` + колонка `ip_address`, уже в `database/migrations`)
 
 ## Сиды
 

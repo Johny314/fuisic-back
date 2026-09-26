@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\RoleName;
+use App\Models\Concerns\AuditsAdminChanges;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Spatie\Permission\Models\Role as SpatieRole;
 
@@ -11,6 +12,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
  */
 class Role extends SpatieRole
 {
+    use AuditsAdminChanges;
     use CrudTrait;
 
     /** Стартовая роль (RoleName): не удаляется и не переименовывается. */
