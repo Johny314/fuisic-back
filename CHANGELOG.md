@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/Johny314/fuisic-back/compare/v4.1.0...v4.2.0) (2026-09-26)
+
+
+### Возможности
+
+* repetitions API with daily queue and idempotent card review ([2e4ed1d](https://github.com/Johny314/fuisic-back/commit/2e4ed1d10bbf33dc267cce4d374165c99cb5455a))
+
 ## [4.1.0](https://github.com/Johny314/fuisic-back/compare/v4.0.2...v4.1.0) (2026-09-26)
 
 
