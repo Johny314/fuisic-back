@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.0.1](https://github.com/Johny314/fuisic-back/compare/v4.0.0...v4.0.1) (2026-09-26)
+
+
+### Исправления
+
+* add remember_token column to users ([374cf77](https://github.com/Johny314/fuisic-back/commit/374cf773bf3e805441cef8166d9fa1dcbebdb85d))
+* create the public/storage link in make setup-local ([a72f92e](https://github.com/Johny314/fuisic-back/commit/a72f92e3c9602c49c6f360f01025afc0b01e0fb9))
+* reset email verification when a user changes email ([dbf384c](https://github.com/Johny314/fuisic-back/commit/dbf384c0cccb27c6d8de3404d87899cb77851a64))
+* run the Laravel scheduler in docker compose ([2003a9e](https://github.com/Johny314/fuisic-back/commit/2003a9eb2d1c69820b19ecb8af57b9026b4c3d49))
+
 ## [4.0.0](https://github.com/Johny314/fuisic-back/compare/v3.7.1...v4.0.0) (2026-09-26)
 
 
