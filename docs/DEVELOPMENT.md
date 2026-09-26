@@ -8,6 +8,7 @@
 |--------|-------|------------|
 | `app` | `fuisic-back:dev` (`docker/app/Dockerfile`, PHP 8.4-FPM) | Приложение |
 | `queue` | `fuisic-back:dev` | Worker: `queue:work rabbitmq` |
+| `scheduler` | `fuisic-back:dev` | Планировщик: `schedule:work` (задачи в `routes/console.php`) |
 | `nginx` | `nginx:1.30-alpine` | Веб-сервер, порт `APP_PORT` (8080) |
 | `pgsql` | `postgres:18` | БД `fuisic` + `testing` для тестов |
 | `redis` | `redis:8-alpine` | Кэш, порт `FORWARD_REDIS_PORT` (6380) |
@@ -82,6 +83,14 @@ Worker запускается контейнером `queue`. Проверка R
 ```bash
 docker compose exec app php artisan queue:work rabbitmq \
   --queue=auth.notifications,default --tries=3
+```
+
+## Планировщик
+
+Контейнер `scheduler` выполняет `php artisan schedule:work`: задачи из `routes/console.php` (снятие истёкших блокировок каждые 5 минут, очистка журнала действий раз в сутки). Список и ближайший запуск:
+
+```bash
+make artisan schedule:list
 ```
 
 ## Pint (форматирование)
