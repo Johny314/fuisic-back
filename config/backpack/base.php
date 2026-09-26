@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Middleware\AuthenticateBackpackSession;
 use App\Http\Middleware\CheckIfAdmin;
 use App\Http\Middleware\LogoutBlockedBackpackUser;
-use Backpack\CRUD\app\Http\Middleware\AuthenticateSession;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 
 return [
@@ -119,7 +119,7 @@ return [
         LogoutBlockedBackpackUser::class,
         CheckIfAdmin::class,
         ConvertEmptyStringsToNull::class,
-        AuthenticateSession::class,
+        AuthenticateBackpackSession::class,
         // \Backpack\CRUD\app\Http\Middleware\UseBackpackAuthGuardInsteadOfDefaultAuthGuard::class,
     ],
 
