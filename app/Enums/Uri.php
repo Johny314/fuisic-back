@@ -38,4 +38,6 @@ enum Uri: string
     case difficulty = 'filters/difficulty';
 
     case files = 'files';
+
+    case teacher_verification = 'teacher_verification';
 }

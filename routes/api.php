@@ -9,6 +9,7 @@ use App\Http\Controllers\File\Store;
 use App\Http\Controllers\Filters;
 use App\Http\Controllers\Section;
 use App\Http\Controllers\Task;
+use App\Http\Controllers\TeacherVerification;
 use App\Http\Controllers\Test;
 use App\Http\Controllers\User;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete(Uri::test_id->value, Test\Destroy::class);
 
     Route::get(Uri::task->value, Task\Index::class);
+
+    Route::get(Uri::teacher_verification->value, TeacherVerification\Show::class);
+    Route::post(Uri::teacher_verification->value, TeacherVerification\Store::class);
 
     // Аккаунты детей родителя; чужой ребёнок — 404
     Route::middleware('can:'.PermissionName::childrenView->value)->group(function () {

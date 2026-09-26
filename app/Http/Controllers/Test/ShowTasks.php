@@ -13,6 +13,7 @@ use App\OpenApi\Tag;
 use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class ShowTasks extends Controller
 {
@@ -27,7 +28,7 @@ class ShowTasks extends Controller
     #[Response(404, NotFound::class)]
     public function __invoke(Test $test): Collection
     {
-        ContentAccess::abortUnlessCanViewTest($test);
+        Gate::forUser(ContentAccess::user())->authorize('view', $test);
 
         return Data::collect($test->tasks()->get());
     }

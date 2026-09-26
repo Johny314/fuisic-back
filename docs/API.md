@@ -36,11 +36,22 @@ OpenAPI/Swagger: `/api/documentation`
 | POST/PUT/DELETE | `task`, `task/{task}` | CRUD заданий |
 | POST/PUT/DELETE | `test`, `test/{test}` | CRUD тестов |
 | POST | `test/{test}/answers` | Проверка ответов (auth) |
+| GET | `teacher_verification` | Последняя заявка учителя на «Проверенного учителя» (404 — заявок не было) |
+| POST | `teacher_verification` | Подать заявку (только роль teacher; 409 — есть заявка на рассмотрении или статус уже подтверждён) |
 | GET/POST | `children` | Мои дети / создать ребёнка (права `children.view` / `children.manage`, см. [AUTH.md](AUTH.md#родитель-и-дети)) |
 | GET/PUT/DELETE | `children/{child}` | Ребёнок: просмотр, профиль, удаление |
 | PUT | `children/{child}/password` | Сброс пароля ребёнку |
 
 URI задаются enum `App\Enums\Uri`.
+
+## Проверенный учитель
+
+Учитель (роль `teacher`) подаёт заявку: `full_name`, `workplace_type` (`Школа` / `Учебный центр` / `Частная практика`), `workplace_name`, `subjects` (1–10 строк), `link` и `comment` — необязательно. Сканы документов не принимаются.
+
+- Статусы (`status`): `pending` → `approved` / `rejected`; `approved` → `revoked`. Новая заявка — если заявок не было или последняя `rejected` / `revoked`; одна `pending` за раз.
+- Решение принимают в админке (`/admin/teacher-verification`, право `teachers.verify`); `reviewer_comment` виден учителю, при отказе и отзыве обязателен. Кто проверял — учителю не отдаётся.
+- Одобрение выдаёт пользователю прямое право `catalog.submit`, отзыв — забирает. Письмо о решении уходит через очередь (`App\Notifications\TeacherVerificationDecided`).
+- `GET /me`: `teacher_verified` и `teacher_verification: {status, reviewer_comment, submitted_at, reviewed_at} | null` (последняя заявка). У автора материалов (`user` в наборах и тестах) — `teacher_verified`.
 
 ## Auth API
 
@@ -53,6 +64,8 @@ URI задаются enum `App\Enums\Uri`.
 ## Admin
 
 Backpack CRUD: `/admin/*` (session auth, роль admin).
+
+- `/admin/teacher-verification` — очередь заявок учителей (фильтр `?status=pending|approved|rejected|revoked|all`, по умолчанию `pending`), одобрение / отказ / отзыв статуса; закрыта правом `teachers.verify`.
 
 ## Health
 

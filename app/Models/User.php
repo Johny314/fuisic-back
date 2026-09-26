@@ -12,6 +12,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -125,6 +127,24 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             'permissions' => $permissions->sort()->values()->all(),
             'teacher_verified' => $this->hasRole(RoleName::teacher->value)
                 && $permissions->contains(PermissionName::catalogSubmit->value),
+            'teacher_verification' => $this->latestTeacherVerification()->first()?->statusSummary(),
         ];
+    }
+
+    /** «Проверенный учитель»: роль teacher и право catalog.submit (выдаётся одобрением заявки). */
+    public function isVerifiedTeacher(): bool
+    {
+        return $this->hasRole(RoleName::teacher->value)
+            && $this->checkPermissionTo(PermissionName::catalogSubmit->value);
+    }
+
+    public function teacherVerifications(): HasMany
+    {
+        return $this->hasMany(TeacherVerification::class);
+    }
+
+    public function latestTeacherVerification(): HasOne
+    {
+        return $this->hasOne(TeacherVerification::class)->latestOfMany();
     }
 }

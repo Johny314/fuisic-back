@@ -115,7 +115,7 @@ FUISIC_AUTH_PASSKEY_RP_ID=localhost
 - Стартовые роли и права — `App\Enums\RoleName`, `App\Enums\PermissionName`; создаёт их `App\Support\RoleCatalog::install()` (миграция и `RoleSeeder`). Повторный запуск добавляет недостающее и не трогает права существующих ролей — их меняют в админке.
 - admin — суперадмин через `Gate::before` (`AppServiceProvider`), прав в роли не хранит.
 - Пока жив `user_type`, модель держит соответствующую роль admin/teacher/student (хуки `created`/`updated` в `User`); moderator и parent назначаются только ролью.
-- `GET /me` дополнительно отдаёт `roles`, `permissions` (у admin — все) и `teacher_verified` (роль teacher и право `catalog.submit`) — `User::authProfile()`.
+- `GET /me` дополнительно отдаёт `roles`, `permissions` (у admin — все), `teacher_verified` (роль teacher и право `catalog.submit`) и `teacher_verification` — статус последней заявки на «Проверенного учителя» (`{status, reviewer_comment, submitted_at, reviewed_at}` или `null`, см. [API.md](API.md#проверенный-учитель)) — `User::authProfile()`.
 
 ## Родитель и дети
 

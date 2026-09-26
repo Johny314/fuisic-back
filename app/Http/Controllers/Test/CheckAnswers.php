@@ -15,6 +15,7 @@ use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
 use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class CheckAnswers extends Controller
 {
@@ -30,7 +31,7 @@ class CheckAnswers extends Controller
     #[Response(404, NotFound::class)]
     public function __invoke(Test $test, Answers $answers): Results
     {
-        ContentAccess::abortUnlessCanViewTest($test);
+        Gate::forUser(ContentAccess::user())->authorize('view', $test);
 
         $tasks = $test->tasks()->get()->keyBy('id');
 
