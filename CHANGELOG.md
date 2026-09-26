@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0](https://github.com/Johny314/fuisic-back/compare/v3.6.0...v3.7.0) (2026-09-26)
+
+
+### Возможности
+
+* admin panel by permissions, role editor and role assignment ([4d55bcc](https://github.com/Johny314/fuisic-back/commit/4d55bcc7401947ac5ea868b84bb8c8bd8b7c4e49))
+
 ## [3.6.0](https://github.com/Johny314/fuisic-back/compare/v3.5.0...v3.6.0) (2026-09-26)
 
 
