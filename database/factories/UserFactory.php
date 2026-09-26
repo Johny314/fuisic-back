@@ -42,6 +42,20 @@ class UserFactory extends Factory
         return $this->withRole(RoleName::parent);
     }
 
+    /** Аккаунт ребёнка: без email, вход по логину; $parent — создавший его родитель. */
+    public function child(?User $parent = null): static
+    {
+        return $this
+            ->state(fn () => [
+                'email' => null,
+                'email_verified_at' => null,
+                'username' => str_replace('-', '_', $this->faker->unique()->slug(2)),
+                'grade' => $this->faker->numberBetween(1, 11),
+                'created_by_id' => $parent?->id,
+            ])
+            ->afterCreating(fn (User $child) => $parent?->children()->attach($child));
+    }
+
     public function withRole(RoleName $role): static
     {
         return $this

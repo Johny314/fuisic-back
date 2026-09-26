@@ -36,6 +36,9 @@ OpenAPI/Swagger: `/api/documentation`
 | POST/PUT/DELETE | `task`, `task/{task}` | CRUD заданий |
 | POST/PUT/DELETE | `test`, `test/{test}` | CRUD тестов |
 | POST | `test/{test}/answers` | Проверка ответов (auth) |
+| GET/POST | `children` | Мои дети / создать ребёнка (права `children.view` / `children.manage`, см. [AUTH.md](AUTH.md#родитель-и-дети)) |
+| GET/PUT/DELETE | `children/{child}` | Ребёнок: просмотр, профиль, удаление |
+| PUT | `children/{child}/password` | Сброс пароля ребёнку |
 
 URI задаются enum `App\Enums\Uri`.
 

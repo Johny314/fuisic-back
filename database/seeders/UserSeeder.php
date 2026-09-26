@@ -21,9 +21,16 @@ class UserSeeder extends Seeder
             'email' => 'moderator@fuisic.local',
         ]);
 
-        User::factory()->parent()->create([
+        $parent = User::factory()->parent()->create([
             'name' => 'Ольга Петрова',
             'email' => 'parent@fuisic.local',
+        ]);
+
+        // ребёнок входит по логину без email
+        User::factory()->child($parent)->create([
+            'name' => 'Маша Петрова',
+            'username' => 'masha',
+            'grade' => 7,
         ]);
 
         User::factory()->create([
