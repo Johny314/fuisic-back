@@ -20,6 +20,7 @@ class Show extends Controller
         path: Uri::task_id,
         tag: Tag::task,
         summary: 'Вывести задачу по ее id',
+        description: 'Правильный ответ (`answer`) — только тем, кто может редактировать задачу; остальным задача без ответа.',
     )]
     #[ModelId('task', 'id задачи')]
 
@@ -27,8 +28,12 @@ class Show extends Controller
     #[Response(404, NotFound::class)]
     public function __invoke(Task $task): Data
     {
-        Gate::forUser(ContentAccess::user())->authorize('view', $task);
+        $gate = Gate::forUser(ContentAccess::user());
+        $gate->authorize('view', $task);
 
-        return Data::from($task);
+        $data = Data::from($task);
+
+        // ответ видит только редактор — иначе его можно подсмотреть, не проходя тест
+        return $gate->allows('update', $task) ? $data : $data->except('answer');
     }
 }
