@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.1.0](https://github.com/Johny314/fuisic-back/compare/v4.0.2...v4.1.0) (2026-09-26)
+
+
+### Возможности
+
+* add FSRS-5 scheduler and per-card review state ([882b2fc](https://github.com/Johny314/fuisic-back/commit/882b2fcd199ce3087f90925196cd9fcc982e7ed2))
+* question types, options, images and points for test tasks ([b59fa9e](https://github.com/Johny314/fuisic-back/commit/b59fa9e7feb22e4ac10d810fcd66baed9534711b))
+* user settings for timezone and repetitions ([43285de](https://github.com/Johny314/fuisic-back/commit/43285dea2827558b615714bf51aaa4c52b5d913b))
+
 ## [4.0.2](https://github.com/Johny314/fuisic-back/compare/v4.0.1...v4.0.2) (2026-09-26)
 
 
