@@ -9,7 +9,9 @@ use App\Services\MediaStorage;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Fuisic\Auth\Traits\HasFuisicAuth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -85,6 +87,41 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function isAdmin(): bool
     {
         return $this->hasRole(RoleName::admin->value);
+    }
+
+    /** Персонал (admin, moderator и все, кому открыта админка): блокирует только admin. */
+    public function isStaff(): bool
+    {
+        return $this->hasAnyRole([RoleName::admin->value, RoleName::moderator->value])
+            || $this->checkPermissionTo(PermissionName::adminAccess->value);
+    }
+
+    public function blocks(): HasMany
+    {
+        return $this->hasMany(UserBlock::class);
+    }
+
+    public function activeBlock(): ?UserBlock
+    {
+        return $this->blocks()->active()->latest('id')->first();
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->blocks()->active()->exists();
+    }
+
+    /** Без действующей блокировки — для скрытия материалов заблокированных авторов из каталога. */
+    public function scopeNotBlocked(Builder $query): void
+    {
+        $query->whereDoesntHave('blocks', fn (Builder $blocks) => $blocks->active());
+    }
+
+    public function authBlock(): ?array
+    {
+        $block = $this->activeBlock();
+
+        return $block ? ['reason' => $block->reason, 'until' => $block->until] : null;
     }
 
     public function assignRegistrationRole(string $role): void

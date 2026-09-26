@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\CheckIfAdmin;
+use App\Http\Middleware\LogoutBlockedBackpackUser;
 use Backpack\CRUD\app\Http\Middleware\AuthenticateSession;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 
@@ -115,6 +116,7 @@ return [
     // The classes for the middleware to check if the visitor is an admin
     // Can be a single class or an array of classes
     'middleware_class' => [
+        LogoutBlockedBackpackUser::class,
         CheckIfAdmin::class,
         ConvertEmptyStringsToNull::class,
         AuthenticateSession::class,

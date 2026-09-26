@@ -65,7 +65,7 @@ final class ContentAccess
     public static function canViewCardSet(CardSet $set, ?User $user = null): bool
     {
         $set->loadMissing('user');
-        if ($set->user?->user_type === UserType::admin) {
+        if (self::isCatalogOwner($set->user)) {
             return true;
         }
 
@@ -98,7 +98,7 @@ final class ContentAccess
     public static function canViewTest(Test $test, ?User $user = null): bool
     {
         $test->loadMissing('user');
-        if ($test->user?->user_type === UserType::admin) {
+        if (self::isCatalogOwner($test->user)) {
             return true;
         }
 
@@ -119,7 +119,7 @@ final class ContentAccess
     }
 
     /**
-     * Контент, который видит текущий пользователь: каталог админов, свой контент; админ — всё.
+     * Контент, который видит текущий пользователь: каталог админов (кроме заблокированных), свой контент; админ — всё.
      */
     public static function applyVisibleScope(Builder $query, string $ownerColumn = 'user_id'): void
     {
@@ -130,7 +130,7 @@ final class ContentAccess
         }
 
         $query->where(function (Builder $visible) use ($user, $ownerColumn) {
-            $visible->whereHas('user', fn (Builder $owner) => $owner->where('user_type', UserType::admin));
+            $visible->whereHas('user', fn (Builder $owner) => self::whereCatalogOwner($owner));
 
             if ($user) {
                 $visible->orWhere($ownerColumn, $user->id);
@@ -159,6 +159,17 @@ final class ContentAccess
             return;
         }
 
-        $query->whereHas('user', fn (Builder $owner) => $owner->where('user_type', UserType::admin));
+        $query->whereHas('user', fn (Builder $owner) => self::whereCatalogOwner($owner));
+    }
+
+    /** Каталог — контент админов; материалы заблокированного пользователя из него скрыты. */
+    public static function isCatalogOwner(?User $owner): bool
+    {
+        return $owner?->user_type === UserType::admin && ! $owner->isBlocked();
+    }
+
+    private static function whereCatalogOwner(Builder $owner): void
+    {
+        $owner->where('user_type', UserType::admin)->notBlocked();
     }
 }
