@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0](https://github.com/Johny314/fuisic-back/compare/v3.4.0...v3.5.0) (2026-09-26)
+
+
+### Возможности
+
+* parent and child accounts with login by username ([254958e](https://github.com/Johny314/fuisic-back/commit/254958e01e6787c7686db82ede7b484094ad1774))
+
 ## [3.4.0](https://github.com/Johny314/fuisic-back/compare/v3.3.0...v3.4.0) (2026-09-26)
 
 
