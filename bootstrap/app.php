@@ -1,5 +1,6 @@
 <?php
 
+use Fuisic\Auth\Http\Middleware\EnsureUserIsNotBlocked;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,7 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // заблокированному — 403 user_blocked на любой запрос с токеном, в т.ч. к публичным маршрутам
+        $middleware->api(append: [EnsureUserIsNotBlocked::class.':sanctum']);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

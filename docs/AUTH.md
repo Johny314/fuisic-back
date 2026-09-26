@@ -58,6 +58,8 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 ```
 
+На всю группу `api` (включая публичные маршруты, если пришёл токен) добавлен `Fuisic\Auth\Http\Middleware\EnsureUserIsNotBlocked:sanctum` (`bootstrap/app.php`) — заблокированному 403 `user_blocked`, см. [Блокировка](#блокировка).
+
 Публичные auth-эндпоинты пакета: `/register`, `/login`, `/password/*`, `/oauth/*`, `/passkeys/*`.
 
 Полный список: [fuisic-auth/docs/API.md](https://github.com/Johny314/fuisic-auth/blob/main/docs/API.md)
@@ -135,6 +137,20 @@ FUISIC_AUTH_PASSKEY_RP_ID=localhost
 | DELETE | `/children/{child}` | `children.manage` | Удалить аккаунт (soft delete, токены отзываются); только родитель-создатель, иначе 403 |
 
 Без права — 403; чужой ребёнок — 404 (существование не раскрывается). Демо: родитель `parent@fuisic.local`, ребёнок — логин `masha`, пароль `password`.
+
+## Блокировка
+
+- Модель `App\Models\UserBlock` (таблица `user_blocks`) — история: причина (`reason`, видна пользователю), внутренний комментарий (`comment`), срок (`until`, `null` — бессрочно), кто и когда заблокировал (`blocked_by_id`, `created_at`), кто и когда снял (`unblocked_by_id`, `unblocked_at`; при снятии по сроку `unblocked_by_id = null`).
+- Действует блокировка, которая не снята и срок которой не истёк (`UserBlock::active()`): истёкшая перестаёт действовать сразу, без планировщика. `User::activeBlock()` — последняя действующая, `User::isBlocked()`.
+- Логика — `App\Services\UserBlocking`:
+  - `canBlock($actor, $target)` — право `users.block`; себя — нельзя; персонал (роли admin, moderator и все с `admin.access`) блокирует только admin;
+  - `block()` — запись в историю, отзыв всех Sanctum-токенов и строк `sessions` пользователя (драйвер `database`);
+  - `unblock()` — снимает все действующие блокировки;
+  - `closeExpired()` — команда `users:unblock-expired`, в расписании каждые 5 минут (`routes/console.php`, нужен `schedule:work` / cron `schedule:run`).
+- Вход и запросы API отсекает fuisic-auth через хук `User::authBlock()`: 403 `{"message", "code": "user_blocked", "block": {"reason", "until"}}` — формат в [fuisic-auth/docs/API.md](https://github.com/Johny314/fuisic-auth/blob/main/docs/API.md#блокировка).
+- Админка: `App\Http\Middleware\LogoutBlockedBackpackUser` (первый в `backpack.base.middleware_class`) выкидывает заблокированного на форму входа с причиной — так закрываются и сессии, которые не удалось удалить (другой драйвер, строка без `user_id`).
+- Каталог: материалы заблокированного автора не видны в каталоге и по прямой ссылке (скоуп `User::notBlocked()` в `ContentAccess::applyVisibleScope` / `applyIndexScope`, `User::isBlocked()` в `canView*`); владелец и admin видят их как раньше.
+- CRUD пользователей: кнопки «Заблокировать» (форма: причина, комментарий, срок) / «Разблокировать», колонка «Блокировка» и история в карточке — `App\Http\Controllers\Admin\Operations\BlockOperation`, доступ по `UserBlocking::canBlock()`.
 
 ## Admin (Backpack)
 

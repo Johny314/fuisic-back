@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Правила для материалов с автором (наборы, тесты): каталог — материалы администраторов,
- * открыт всем; личное видит и меняет владелец; каталог меняет право catalog.manage.
+ * открыт всем (кроме материалов заблокированных); личное видит и меняет владелец; каталог меняет право catalog.manage.
  * Admin проходит раньше, через Gate::before.
  */
 trait AuthorizesContent
 {
     protected function isCatalog(Model $content): bool
     {
-        return (bool) $content->user?->isAdmin();
+        return $content->user?->isAdmin() && ! $content->user->isBlocked();
     }
 
     protected function canView(?User $user, Model $content): bool

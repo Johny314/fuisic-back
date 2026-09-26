@@ -28,15 +28,15 @@ final class ContentAccess
     }
 
     /**
-     * Каталог: материалы администраторов.
+     * Каталог: материалы администраторов, кроме заблокированных.
      */
     public static function applyCatalogScope(Builder $query): void
     {
-        $query->whereHas('user', fn (Builder $owner) => $owner->role(RoleName::admin->value));
+        $query->whereHas('user', fn (Builder $owner) => $owner->role(RoleName::admin->value)->notBlocked());
     }
 
     /**
-     * Контент, который видит текущий пользователь: каталог админов, свой контент; админ — всё.
+     * Контент, который видит текущий пользователь: каталог админов (кроме заблокированных), свой контент; админ — всё.
      */
     public static function applyVisibleScope(Builder $query, string $ownerColumn = 'user_id'): void
     {

@@ -237,7 +237,7 @@ class ChildrenTest extends TestCase
     public function test_child_cannot_change_username_role_or_parent_via_profile_update(): void
     {
         $parent = User::factory()->parent()->create();
-        $child = User::factory()->child($parent)->create(['username' => 'masha']);
+        $child = User::factory()->child($parent)->create(['username' => 'masha', 'grade' => 5]);
         Sanctum::actingAs($child);
 
         $this->putJson("/user/{$child->id}", [
@@ -254,7 +254,7 @@ class ChildrenTest extends TestCase
         $this->assertSame('masha', $child->username);
         $this->assertSame(['student'], $child->getRoleNames()->all());
         $this->assertSame($parent->id, $child->created_by_id);
-        $this->assertNotSame(11, $child->grade);
+        $this->assertSame(5, $child->grade);
         $this->assertTrue($parent->children()->whereKey($child->id)->exists());
 
         // отвязаться или удалить аккаунт сам не может
