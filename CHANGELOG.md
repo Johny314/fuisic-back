@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://github.com/Johny314/fuisic-back/compare/v4.0.1...v4.0.2) (2026-09-26)
+
+
+### Исправления
+
+* hide the correct answer of a task from non-editors ([3c0be74](https://github.com/Johny314/fuisic-back/commit/3c0be7471099716f3d065475fb39f7d9bbb32a27))
+
 ## [4.0.1](https://github.com/Johny314/fuisic-back/compare/v4.0.0...v4.0.1) (2026-09-26)
 
 
