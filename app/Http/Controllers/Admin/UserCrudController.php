@@ -22,7 +22,9 @@ class UserCrudController extends CrudController
     use DeleteOperation;
     use ListOperation;
     use ShowOperation;
-    use UpdateOperation;
+    use UpdateOperation {
+        update as traitUpdate;
+    }
 
     public function setup()
     {
@@ -82,5 +84,16 @@ class UserCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+        CRUD::field('password')->hint('Оставьте пустым, чтобы не менять пароль');
+    }
+
+    public function update()
+    {
+        // пустое поле пароля не должно затирать текущий
+        if (blank($this->crud->getRequest()->input('password'))) {
+            $this->crud->getRequest()->request->remove('password');
+        }
+
+        return $this->traitUpdate();
     }
 }

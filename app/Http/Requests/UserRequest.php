@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\UserType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
 {
@@ -23,7 +25,11 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->route('id'))],
+            // при редактировании пустой пароль = оставить прежний (см. UserCrudController::update)
+            'password' => [$this->route('id') ? 'nullable' : 'required', 'string', 'min:8'],
+            'user_type' => ['required', Rule::enum(UserType::class)],
         ];
     }
 
