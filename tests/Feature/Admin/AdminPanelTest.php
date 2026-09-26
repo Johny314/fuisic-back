@@ -30,6 +30,9 @@ class AdminPanelTest extends TestCase
             'test create' => ['/admin/test/create'],
             'users' => ['/admin/user'],
             'user create' => ['/admin/user/create'],
+            'roles' => ['/admin/role'],
+            'role create' => ['/admin/role/create'],
+            'teacher verifications' => ['/admin/teacher-verification'],
             'account' => ['/admin/edit-account-info'],
         ];
     }
@@ -49,7 +52,7 @@ class AdminPanelTest extends TestCase
         Section::factory()->create();
         Test::factory()->for($admin)->create();
 
-        foreach (['card-set', 'section', 'test', 'user'] as $entity) {
+        foreach (['card-set', 'section', 'test', 'user', 'role'] as $entity) {
             $this->actingAs($admin, 'backpack')
                 ->post("/admin/{$entity}/search", ['draw' => 1, 'start' => 0, 'length' => 10])
                 ->assertOk()
@@ -90,7 +93,6 @@ class AdminPanelTest extends TestCase
                 'name' => 'Новый учитель',
                 'email' => 'new-teacher@example.com',
                 'password' => 'Teacher-pass-123',
-                'user_type' => 'teacher',
             ])
             ->assertSessionHasNoErrors();
 
@@ -110,7 +112,6 @@ class AdminPanelTest extends TestCase
                 'name' => 'Переименован',
                 'email' => $user->email,
                 'password' => '',
-                'user_type' => 'student',
             ])
             ->assertSessionHasNoErrors();
 
@@ -134,7 +135,7 @@ class AdminPanelTest extends TestCase
 
     public function test_student_cannot_open_admin(): void
     {
-        // CheckIfAdmin уводит не-админа на форму входа
+        // CheckIfAdmin уводит пользователя без admin.access на форму входа
         $this->actingAs(User::factory()->create(), 'backpack')
             ->get('/admin/dashboard')
             ->assertRedirect('/admin/login');

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Enums\PermissionName;
 use App\Models\User;
 use App\Services\UserBlocking;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -103,9 +104,10 @@ class UserBlockAdminTest extends TestCase
 
     public function test_block_actions_require_users_block_permission(): void
     {
-        // в админку пока пускает user_type = admin; без роли admin права users.block нет
-        $withoutPermission = User::factory()->admin()->create();
+        // в админку пускает, но блокировать без users.block нельзя
+        $withoutPermission = User::factory()->create();
         $withoutPermission->syncRoles([]);
+        $withoutPermission->givePermissionTo([PermissionName::adminAccess->value, PermissionName::usersView->value]);
         $user = User::factory()->create();
 
         $this->actingAs($withoutPermission, 'backpack')->get("/admin/user/{$user->id}/block")->assertForbidden();

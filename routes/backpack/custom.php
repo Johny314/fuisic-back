@@ -19,6 +19,7 @@ Route::group([
 ], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('backpack.dashboard');
     Route::crud('user', 'UserCrudController');
+    Route::crud('role', 'RoleCrudController');
     Route::crud('section', 'SectionCrudController');
     Route::crud('card-set', 'CardSetCrudController');
     Route::crud('test', 'TestCrudController');

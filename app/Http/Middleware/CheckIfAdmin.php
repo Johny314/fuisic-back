@@ -2,61 +2,48 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\UserType;
-use App\Models\User;
+use App\Enums\PermissionName;
 use Closure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/**
+ * Вход в админку — право admin.access (admin проходит через Gate::before).
+ * Разделы внутри закрыты своими правами (Admin\Concerns\AuthorizesCrud).
+ */
 class CheckIfAdmin
 {
-    /**
-     * Checked that the logged in user is an administrator.
-     *
-     * --------------
-     * VERY IMPORTANT
-     * --------------
-     * If you have both regular users and admins inside the same table, change
-     * the contents of this method to check that the logged in user
-     * is an admin, and not a regular user.
-     *
-     * Additionally, in Laravel 7+, you should change app/Providers/RouteServiceProvider::HOME
-     * which defines the route where a logged in user (but not admin) gets redirected
-     * when trying to access an admin route. By default it's '/home' but Backpack
-     * does not have a '/home' route, use something you've built for your users
-     * (again - users, not admins).
-     */
-    private function checkIfUserIsAdmin($user): bool
-    {
-        return $user->user_type->value === UserType::admin->value;
-    }
+    public const string DENIED = 'Нет доступа к админке';
 
-    /**
-     * Answer to unauthorized access request.
-     */
-    private function respondToUnauthorizedRequest(Request $request): Response|RedirectResponse
-    {
-        if ($request->ajax() || $request->wantsJson()) {
-            return response(trans('backpack::base.unauthorized'), 401);
-        } else {
-            return redirect()->guest(backpack_url('login'));
-        }
-    }
-
-    /**
-     * Handle an incoming request.
-     */
     public function handle(Request $request, Closure $next): mixed
     {
         if (backpack_auth()->guest()) {
-            return $this->respondToUnauthorizedRequest($request);
+            return $this->deny($request, trans('backpack::base.unauthorized'), 401);
         }
 
-        if (! $this->checkIfUserIsAdmin(backpack_user())) {
-            return $this->respondToUnauthorizedRequest($request);
+        if (! backpack_user()->can(PermissionName::adminAccess->value)) {
+            // выходим, иначе форма входа (guest) уведёт вошедшего без права обратно
+            backpack_auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return $this->deny($request, self::DENIED, 403, withError: true);
         }
 
         return $next($request);
+    }
+
+    private function deny(Request $request, string $message, int $status, bool $withError = false): Response|RedirectResponse
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            return response($message, $status);
+        }
+
+        $redirect = redirect()->guest(backpack_url('login'));
+
+        return $withError
+            ? $redirect->withErrors([config('backpack.base.authentication_column', 'email') => $message])
+            : $redirect;
     }
 }

@@ -51,6 +51,41 @@ enum RoleName: string
         };
     }
 
+    public function label(): string
+    {
+        return match ($this) {
+            self::admin => 'Администратор',
+            self::moderator => 'Модератор',
+            self::teacher => 'Учитель',
+            self::student => 'Ученик',
+            self::parent => 'Родитель',
+        };
+    }
+
+    /** Подпись роли по имени; свои роли из админки — как есть. */
+    public static function labelFor(string $name): string
+    {
+        return self::tryFrom($name)?->label() ?? $name;
+    }
+
+    /**
+     * `user_type` по набору ролей: admin, иначе teacher, иначе student.
+     *
+     * @param  iterable<string>  $roles
+     */
+    public static function legacyUserTypeFor(iterable $roles): UserType
+    {
+        $roles = collect($roles);
+
+        foreach ([self::admin, self::teacher] as $main) {
+            if ($roles->contains($main->value)) {
+                return $main->legacyUserType();
+            }
+        }
+
+        return UserType::student;
+    }
+
     public static function fromUserType(UserType $type): self
     {
         return self::from($type->value);

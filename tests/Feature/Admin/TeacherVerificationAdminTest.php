@@ -4,7 +4,6 @@ namespace Tests\Feature\Admin;
 
 use App\Enums\PermissionName;
 use App\Enums\TeacherVerificationStatus as Status;
-use App\Http\Middleware\CheckIfAdmin;
 use App\Models\TeacherVerification;
 use App\Models\User;
 use App\Notifications\TeacherVerificationDecided;
@@ -164,18 +163,17 @@ class TeacherVerificationAdminTest extends TestCase
         $verification = TeacherVerification::factory()->create();
 
         $this->actingAs($user, 'backpack')->get(self::URL)->assertRedirect('/admin/login');
-        $this->post(self::URL.'/'.$verification->id.'/approve')->assertRedirect('/admin/login');
+        $this->actingAs($user, 'backpack')->post(self::URL.'/'.$verification->id.'/approve')->assertRedirect('/admin/login');
 
-        // и без проверки входа в админку (её переделывает #24) операции закрыты правом
-        $this->withoutMiddleware(CheckIfAdmin::class);
-        $this->get(self::URL)->assertForbidden();
-        $this->post(self::URL.'/'.$verification->id.'/approve')->assertForbidden();
+        // и с входом в админку операции закрыты правом teachers.verify
+        $user->givePermissionTo(PermissionName::adminAccess->value);
+        $this->actingAs($user->fresh(), 'backpack')->get(self::URL)->assertForbidden();
+        $this->actingAs($user->fresh(), 'backpack')->post(self::URL.'/'.$verification->id.'/approve')->assertForbidden();
         $this->assertSame(Status::pending, $verification->fresh()->status);
     }
 
     public function test_queue_requires_teachers_verify_permission(): void
     {
-        $this->withoutMiddleware(CheckIfAdmin::class);
         $moderator = User::factory()->moderator()->create();
         $verification = TeacherVerification::factory()->create();
 
