@@ -26,6 +26,7 @@ use OpenApi\Attributes as OA;
 #[TagAttr(Tag::task)]
 #[TagAttr(Tag::section)]
 #[TagAttr(Tag::user)]
+#[TagAttr(Tag::teacher_verification)]
 abstract class Controller
 {
     //

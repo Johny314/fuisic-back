@@ -14,9 +14,11 @@ enum Tag: string
     case task = 'task';
     case section = 'section';
     case user = 'user';
+    case children = 'children';
     case auth = 'auth';
     case filters = 'filters';
     case files = 'files';
+    case teacher_verification = 'teacher_verification';
 
     public function label(): string
     {
@@ -27,9 +29,11 @@ enum Tag: string
             self::task => 'Задачи',
             self::section => 'Разделы',
             self::user => 'Пользователи',
+            self::children => 'Дети',
             self::auth => 'Авторизация',
             self::filters => 'Доступные фильтры',
             self::files => 'Файлы',
+            self::teacher_verification => 'Проверенный учитель',
         };
     }
 }

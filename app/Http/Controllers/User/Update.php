@@ -12,8 +12,8 @@ use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
 use App\Services\MediaStorage;
-use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class Update extends Controller
@@ -29,7 +29,7 @@ class Update extends Controller
     #[Response(200, Data::class)]
     public function __invoke(User $user, Data $data, MediaStorage $media): UserData
     {
-        ContentAccess::abortUnlessCanManageUser($user);
+        Gate::authorize('update', $user);
 
         $payload = [
             'name' => $data->name,

@@ -12,6 +12,7 @@ use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
 use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class Show extends Controller
 {
@@ -26,7 +27,7 @@ class Show extends Controller
     #[Response(404, NotFound::class)]
     public function __invoke(Test $test): Data
     {
-        ContentAccess::abortUnlessCanViewTest($test);
+        Gate::forUser(ContentAccess::user())->authorize('view', $test);
         $test->load(['section', 'user']);
 
         return Data::from($test);

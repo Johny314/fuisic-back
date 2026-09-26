@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PermissionName;
 use App\Enums\UserType;
+use App\Http\Controllers\Admin\Concerns\AuthorizesCrud;
 use App\Http\Controllers\Admin\Operations\BlockOperation;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
@@ -20,6 +22,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class UserCrudController extends CrudController
 {
+    use AuthorizesCrud;
     use BlockOperation;
     use CreateOperation;
     use DeleteOperation;
@@ -34,6 +37,8 @@ class UserCrudController extends CrudController
         CRUD::setModel(User::class);
         CRUD::setRoute(config('backpack.base.route_prefix').'/user');
         CRUD::setEntityNameStrings('Пользователь', 'Пользователи');
+
+        $this->authorizeCrud(PermissionName::usersView);
     }
 
     protected function setupListOperation()
@@ -65,7 +70,7 @@ class UserCrudController extends CrudController
             'name' => 'user_type',
             'label' => 'Тип пользователя',
             'type' => 'select_from_array',
-            'options' => collect(UserType::cases())->mapWithKeys(fn ($case) => [$case->value => $case->name])->toArray(),
+            'options' => collect(UserRequest::assignableUserTypes())->mapWithKeys(fn ($case) => [$case->value => $case->name])->toArray(),
             'allows_null' => false,
             'default' => UserType::student->value,
         ]);

@@ -10,8 +10,8 @@ use App\OpenApi\Put;
 use App\OpenApi\Request\RequestBody;
 use App\OpenApi\Response\Response;
 use App\OpenApi\Tag;
-use App\Support\ContentAccess;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class Update extends Controller
 {
@@ -27,7 +27,7 @@ class Update extends Controller
     public function __invoke(Card $card, Data $data): Data
     {
         $card->loadMissing('cardSet');
-        ContentAccess::abortUnlessCanManageCardSet($card->cardSet);
+        Gate::authorize('update', $card);
 
         $payload = $data->persistAttributes();
         unset($payload['card_set_id']);

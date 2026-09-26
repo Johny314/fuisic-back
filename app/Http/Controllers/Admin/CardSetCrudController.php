@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PermissionName;
+use App\Http\Controllers\Admin\Concerns\AuthorizesCrud;
 use App\Http\Requests\CardSetRequest;
 use App\Models\Card\CardSet;
+use App\Support\ContentAccess;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -20,6 +23,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class CardSetCrudController extends CrudController
 {
+    use AuthorizesCrud;
     use CreateOperation;
     use DeleteOperation;
     use ListOperation;
@@ -36,6 +40,12 @@ class CardSetCrudController extends CrudController
         CRUD::setModel(CardSet::class);
         CRUD::setRoute(config('backpack.base.route_prefix').'/card-set');
         CRUD::setEntityNameStrings('Набор карточек', 'Наборы карточек');
+
+        $this->authorizeCrud(PermissionName::catalogManage);
+        // не админ видит только то, что может редактировать: своё и каталог
+        if ($user = backpack_user()) {
+            CRUD::addBaseClause(fn ($query) => ContentAccess::applyEditableScope($query, $user));
+        }
     }
 
     /**

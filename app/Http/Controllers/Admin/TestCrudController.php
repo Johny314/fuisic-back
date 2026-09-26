@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PermissionName;
+use App\Http\Controllers\Admin\Concerns\AuthorizesCrud;
 use App\Http\Requests\TestRequest;
 use App\Models\Test\Test;
+use App\Support\ContentAccess;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -20,6 +23,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class TestCrudController extends CrudController
 {
+    use AuthorizesCrud;
     use CreateOperation;
     use DeleteOperation;
     use ListOperation;
@@ -36,6 +40,12 @@ class TestCrudController extends CrudController
         CRUD::setModel(Test::class);
         CRUD::setRoute(config('backpack.base.route_prefix').'/test');
         CRUD::setEntityNameStrings('Тест', 'Тесты');
+
+        $this->authorizeCrud(PermissionName::catalogManage);
+        // не админ видит только то, что может редактировать: своё и каталог
+        if ($user = backpack_user()) {
+            CRUD::addBaseClause(fn ($query) => ContentAccess::applyEditableScope($query, $user));
+        }
     }
 
     /**
