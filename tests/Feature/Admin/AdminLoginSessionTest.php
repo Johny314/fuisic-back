@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -24,6 +25,29 @@ class AdminLoginSessionTest extends TestCase
 
         $this->get('/admin/dashboard')->assertOk();
         $this->get('/admin/user')->assertOk();
+        $this->assertAuthenticatedAs($admin, 'backpack');
+    }
+
+    public function test_login_with_remember_me_keeps_the_session_and_sets_the_cookie(): void
+    {
+        $admin = User::factory()->admin()->create(['password' => Hash::make('Admin-pass-123')]);
+        $cookie = Auth::guard('backpack')->getRecallerName();
+
+        $response = $this->post('/admin/login', ['email' => $admin->email, 'password' => 'Admin-pass-123', 'remember' => '1'])
+            ->assertRedirect()
+            ->assertCookie($cookie);
+
+        $this->assertNotNull($admin->fresh()->getRememberToken());
+        $this->get('/admin/dashboard')->assertOk();
+        $this->assertAuthenticatedAs($admin, 'backpack');
+
+        // Сессия потеряна (браузер закрыт) — вход восстанавливается по cookie «Запомнить меня»
+        $this->flushSession();
+        $this->app['auth']->forgetGuards();
+
+        $this->withCookie($cookie, $response->getCookie($cookie)->getValue())
+            ->get('/admin/dashboard')
+            ->assertOk();
         $this->assertAuthenticatedAs($admin, 'backpack');
     }
 
