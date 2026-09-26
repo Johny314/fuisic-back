@@ -22,7 +22,7 @@ jobs:
       # PR от GITHUB_TOKEN не запускает CI, а без проверок защита main не даст его смержить.
       # workflow_dispatch от GITHUB_TOKEN разрешён — запускаем CI на ветке релизного PR.
       - name: Run CI on the release PR
-        if: steps.release.outputs.prs_created == 'true' && hashFiles('.github/workflows/ci.yml') != ''
+        if: steps.release.outputs.prs_created == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           BRANCH: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
