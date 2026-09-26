@@ -45,6 +45,8 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     {
         return [
             'email_verified_at' => 'datetime',
+            // уже захэшированные значения (Hash::make в контроллерах) повторно не хэшируются
+            'password' => 'hashed',
             'user_type' => UserType::class,
         ];
     }
