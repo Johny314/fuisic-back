@@ -25,6 +25,7 @@ class Index extends Controller
         path: Uri::task,
         tag: Tag::task,
         summary: 'Список задач, с пагинацией',
+        description: 'Вопросы целиком (с ответами) из тестов, которые пользователь может редактировать: свои, каталог — с правом catalog.manage, admin — все.',
     )]
     #[Sort(['id', 'test_id'])]
     #[Filter(name: 'test_id', example: 1)]
@@ -35,11 +36,9 @@ class Index extends Controller
     public function __invoke(Request $request): PaginatedDataCollection
     {
         $user = ContentAccess::requireUser();
-        $query = TaskModel::query()->whereHas('test', function ($testQuery) use ($user) {
-            if (! $user->isAdmin()) {
-                $testQuery->where('user_id', $user->id);
-            }
-        });
+        // список — для редактора (с ответами): только тесты, которые пользователь может менять
+        $query = TaskModel::query()->with('options')
+            ->whereHas('test', fn ($testQuery) => ContentAccess::applyEditableScope($testQuery, $user));
 
         $models = QueryBuilder::for($query)
             ->allowedSorts(...['id', 'test_id'])

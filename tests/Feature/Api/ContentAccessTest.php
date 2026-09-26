@@ -125,8 +125,8 @@ class ContentAccessTest extends TestCase
     public function test_check_answers_scores_public_test(): void
     {
         $test = Test::factory()->for($this->admin)->create();
-        $right = Task::factory()->for($test)->create(['answer' => '42']);
-        $wrong = Task::factory()->for($test)->create(['answer' => '7']);
+        $right = Task::factory()->for($test)->answer('42')->create();
+        $wrong = Task::factory()->for($test)->answer('7')->create();
 
         $this->postJson("/test/{$test->id}/answers", [
             'time' => 30,
@@ -144,7 +144,7 @@ class ContentAccessTest extends TestCase
     public function test_check_answers_rejects_private_test_for_strangers(): void
     {
         $test = Test::factory()->for($this->owner)->create();
-        $task = Task::factory()->for($test)->create(['answer' => 'секрет']);
+        $task = Task::factory()->for($test)->answer('секрет')->create();
         $payload = ['time' => 5, 'answers' => [['task_id' => $task->id, 'answer' => '?']]];
 
         $this->postJson("/test/{$test->id}/answers", $payload)->assertForbidden();
@@ -159,7 +159,7 @@ class ContentAccessTest extends TestCase
     public function test_check_answers_does_not_reveal_tasks_of_other_tests(): void
     {
         $public = Test::factory()->for($this->admin)->create();
-        $foreign = Task::factory()->for(Test::factory()->for($this->owner))->create(['answer' => 'секрет']);
+        $foreign = Task::factory()->for(Test::factory()->for($this->owner))->answer('секрет')->create();
 
         $this->postJson("/test/{$public->id}/answers", [
             'time' => 5,

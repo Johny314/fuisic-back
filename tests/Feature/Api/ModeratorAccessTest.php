@@ -83,7 +83,7 @@ class ModeratorAccessTest extends TestCase
         Sanctum::actingAs($this->moderator);
 
         $this->putJson("/test/{$test->id}", $this->updateTestPayload($test, 'Каталог'))->assertOk();
-        $this->postJson('/task', ['test_id' => (string) $test->id, 'answer' => '1'])->assertSuccessful();
+        $this->postJson('/task', ['test_id' => (string) $test->id, 'problem_statement' => '2 + 2?', 'answer' => '1'])->assertSuccessful();
         $this->putJson("/task/{$task->id}", ['test_id' => (string) $test->id, 'answer' => '2'])->assertOk();
         $this->deleteJson("/task/{$task->id}")->assertOk();
         $this->deleteJson("/test/{$test->id}")->assertOk();

@@ -16,9 +16,9 @@ OpenAPI/Swagger: `/api/documentation`
 | GET | `section`, `section/{section}` | Разделы |
 | GET | `user`, `user/{user}` | Пользователи |
 | GET | `card`, `card/{card}` | Карточки |
-| GET | `task`, `task/{task}` | Задания |
+| GET | `task/{task}` | Задание: редактору — целиком, остальным — как при прохождении |
 | GET | `test`, `test/{test}` | Тесты |
-| GET | `test/{test}/tasks` | Задания теста |
+| GET | `test/{test}/tasks` | Задания теста для прохождения (без ответов) |
 | POST | `test/{test}/answers` | Проверка ответов (публично) |
 | GET | `filters/classification` | Фильтр: классификация |
 | GET | `filters/difficulty` | Фильтр: сложность |
@@ -33,7 +33,8 @@ OpenAPI/Swagger: `/api/documentation`
 | POST/PUT/DELETE | `section`, `section/{section}` | CRUD разделов |
 | POST/PUT/DELETE | `user`, `user/{user}` | CRUD пользователей (`users.manage`); созданный через `POST user` получает роль student, роли меняются только в админке |
 | POST/PUT/DELETE | `card`, `card/{card}` | CRUD карточек |
-| POST/PUT/DELETE | `task`, `task/{task}` | CRUD заданий |
+| GET | `task` | Задания тестов, которые пользователь может редактировать (с ответами) |
+| POST/PUT/DELETE | `task`, `task/{task}` | CRUD заданий (см. [Вопросы теста](#вопросы-теста)) |
 | POST/PUT/DELETE | `test`, `test/{test}` | CRUD тестов |
 | POST | `test/{test}/answers` | Проверка ответов (auth) |
 | GET | `teacher_verification` | Последняя заявка учителя на «Проверенного учителя» (404 — заявок не было) |
@@ -54,6 +55,25 @@ URI задаются enum `App\Enums\Uri`.
 - Уже выданные токены продолжают работать.
 - Сохранение без смены email подтверждение не трогает и письма не шлёт. Удаление email (только у аккаунта с логином) сбрасывает подтверждение без письма.
 - То же при смене email в админке (`/admin/user`) — правило в модели `User` (хуки `updating` / `updated`), а не в контроллере.
+
+## Вопросы теста
+
+Задача (`task`) — вопрос одного из типов (`App\Enums\TaskType`, описание типа — `App\Support\Tasks\*`):
+
+| `type` | Ответ задаётся |
+|---|---|
+| `single` | `options`: 2–10 вариантов, ровно один `is_correct` |
+| `multiple` | `options`: 2–10 вариантов, хотя бы один `is_correct` |
+| `text` | `settings.answers`: 1–20 допустимых ответов |
+| `number` | `settings`: `value`, `tolerance` (null — точно), `tolerance_type` `absolute`/`percent`, `units` (пусто — без единиц); «0,5» = «0.5» |
+
+Общие поля: `problem_statement` (формулы — текст в `$…$`; обязательно, если нет картинки), `image_path` (путь из `POST /files` с `purpose=task_image`), `points` (0–100, по умолчанию 1), `explanation` (разбор после сдачи), `shuffle_options`. У варианта — `text` и/или `image_path`, `is_correct`; порядок — по массиву.
+
+- `POST /task` / `PUT /task/{task}` — вопрос целиком. Не переданное поле не меняется; `options` заменяют все варианты (с `id` — изменить, без — добавить, отсутствующие удаляются; у варианта с `id` без `image_path` картинка остаётся). Смена типа на `text`/`number` удаляет варианты.
+- Старый формат студии `{test_id, problem_statement, answer}` работает: без `type` создаётся `text` с одним ответом; `answer` без `settings` при изменении — единственный ответ `text` или значение `number` (допуск и единицы сохраняются); тот же `answer` ничего не меняет. В ответе редактора `answer` — правильный ответ строкой (устарело).
+- Правильные ответы (`settings`, `is_correct`, `answer`) и `explanation` отдаются только редактору (автор, `catalog.manage` для каталога, admin): `GET /task`, `GET /task/{task}`, ответы `POST/PUT`. При прохождении (`GET /test/{test}/tasks`, `GET /task/{task}` не редактору) — `ShortTask`: `id`, `type`, `problem_statement`, `image_url`, `points`, `options` (`id`, `text`, `image_url`; при `shuffle_options` — в случайном порядке).
+- `POST /test/{test}/answers` пока сравнивает «как раньше» (`text` — точно с одним из ответов, `number` — то же число, `single`/`multiple` — id вариантов через запятую); проверка с допуском, единицами и баллами — fuisic-back#61.
+- Админка: `/admin/task` — просмотр вопросов (тип, настройки, варианты) и правка условия, баллов, разбора, перемешивания; тип и варианты — через API.
 
 ## Проверенный учитель
 

@@ -21,6 +21,7 @@ class ShowTasks extends Controller
         path: Uri::test_tasks,
         tag: Tag::test,
         summary: 'Вывести задачи теста по его id',
+        description: 'Для прохождения: без правильных ответов, настроек проверки и разбора.',
     )]
     #[ModelId('test', 'id теста')]
 
@@ -30,6 +31,6 @@ class ShowTasks extends Controller
     {
         Gate::forUser(ContentAccess::user())->authorize('view', $test);
 
-        return Data::collect($test->tasks()->get());
+        return Data::collect($test->tasks()->with('options')->orderBy('id')->get());
     }
 }

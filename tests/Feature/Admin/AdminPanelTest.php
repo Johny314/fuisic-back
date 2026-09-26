@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Card\CardSet;
 use App\Models\Section;
+use App\Models\Test\Task;
 use App\Models\Test\Test;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -28,6 +29,7 @@ class AdminPanelTest extends TestCase
             'card set create' => ['/admin/card-set/create'],
             'tests' => ['/admin/test'],
             'test create' => ['/admin/test/create'],
+            'tasks' => ['/admin/task'],
             'users' => ['/admin/user'],
             'user create' => ['/admin/user/create'],
             'roles' => ['/admin/role'],
@@ -52,7 +54,9 @@ class AdminPanelTest extends TestCase
         Section::factory()->create();
         Test::factory()->for($admin)->create();
 
-        foreach (['card-set', 'section', 'test', 'user', 'role'] as $entity) {
+        Task::factory()->for(Test::factory()->for($admin))->single()->create();
+
+        foreach (['card-set', 'section', 'test', 'task', 'user', 'role'] as $entity) {
             $this->actingAs($admin, 'backpack')
                 ->post("/admin/{$entity}/search", ['draw' => 1, 'start' => 0, 'length' => 10])
                 ->assertOk()
@@ -131,6 +135,35 @@ class AdminPanelTest extends TestCase
                 'user_id' => $admin->id,
             ])
             ->assertSessionHasErrors('subject');
+    }
+
+    public function test_admin_views_and_edits_question_without_touching_answers(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $task = Task::factory()->for(Test::factory()->for($admin))->single(['Ньютон' => true, 'Джоуль' => false])->create();
+        $number = Task::factory()->for(Test::factory()->for($admin))->number(9.8, 0.1, 'absolute', ['м/с²'])->create();
+
+        $this->actingAs($admin, 'backpack')->get("/admin/task/{$task->id}/show")
+            ->assertOk()->assertSee('Один вариант')->assertSee('Ньютон')->assertSee('Джоуль');
+        $this->actingAs($admin, 'backpack')->get("/admin/task/{$number->id}/show")->assertOk()->assertSee('м/с²');
+        $this->actingAs($admin, 'backpack')->get("/admin/task/{$task->id}/edit")->assertOk();
+
+        $this->actingAs($admin, 'backpack')
+            ->put("/admin/task/{$number->id}", [
+                'id' => $number->id,
+                'problem_statement' => 'Ускорение $g$?',
+                'points' => 3,
+                'explanation' => 'Разбор',
+                'shuffle_options' => 0,
+            ])
+            ->assertSessionHasNoErrors();
+
+        $number->refresh();
+        $this->assertSame('Ускорение $g$?', $number->problem_statement);
+        $this->assertSame(3, $number->points);
+        $this->assertSame(9.8, $number->settings['value']);
+        $this->assertSame(0.1, $number->settings['tolerance']);
+        $this->assertSame(['м/с²'], $number->settings['units']);
     }
 
     public function test_student_cannot_open_admin(): void
