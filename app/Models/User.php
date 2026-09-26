@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Data\Settings\UserSettings;
 use App\Enums\PermissionName;
 use App\Enums\RoleName;
 use App\Models\Concerns\AuditsAdminChanges;
@@ -172,7 +173,14 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             'teacher_verified' => $this->hasRole(RoleName::teacher->value)
                 && $permissions->contains(PermissionName::catalogSubmit->value),
             'teacher_verification' => $this->latestTeacherVerification()->first()?->statusSummary(),
+            'settings' => UserSettings::fromUser($this)->toArray(),
         ];
+    }
+
+    /** Настройки; без сохранённой строки — значения по умолчанию (не сохраняются). */
+    public function settings(): HasOne
+    {
+        return $this->hasOne(UserSetting::class)->withDefault();
     }
 
     /** «Проверенный учитель»: роль teacher и право catalog.submit (выдаётся одобрением заявки). */

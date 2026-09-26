@@ -40,4 +40,6 @@ enum Uri: string
     case files = 'files';
 
     case teacher_verification = 'teacher_verification';
+
+    case settings = 'settings';
 }

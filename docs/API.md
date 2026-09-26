@@ -38,6 +38,7 @@ OpenAPI/Swagger: `/api/documentation`
 | POST | `test/{test}/answers` | Проверка ответов (auth) |
 | GET | `teacher_verification` | Последняя заявка учителя на «Проверенного учителя» (404 — заявок не было) |
 | POST | `teacher_verification` | Подать заявку (только роль teacher; 409 — есть заявка на рассмотрении или статус уже подтверждён) |
+| GET/PUT | `settings` | Мои настройки / изменить (частично), см. [Настройки](#настройки-пользователя) |
 | GET/POST | `children` | Мои дети / создать ребёнка (права `children.view` / `children.manage`, см. [AUTH.md](AUTH.md#родитель-и-дети)) |
 | GET/PUT/DELETE | `children/{child}` | Ребёнок: просмотр, профиль, удаление |
 | PUT | `children/{child}/password` | Сброс пароля ребёнку |
@@ -62,6 +63,23 @@ URI задаются enum `App\Enums\Uri`.
 - Решение принимают в админке (`/admin/teacher-verification`, право `teachers.verify`); `reviewer_comment` виден учителю, при отказе и отзыве обязателен. Кто проверял — учителю не отдаётся.
 - Одобрение выдаёт пользователю прямое право `catalog.submit`, отзыв — забирает. Письмо о решении уходит через очередь (`App\Notifications\TeacherVerificationDecided`).
 - `GET /me`: `teacher_verified` и `teacher_verification: {status, reviewer_comment, submitted_at, reviewed_at} | null` (последняя заявка). У автора материалов (`user` в наборах и тестах) — `teacher_verified`.
+
+## Настройки пользователя
+
+`GET /settings` и `PUT /settings` — только свои (id в URI нет). `PUT` — частичное обновление: меняются только переданные поля, пустое тело ничего не меняет. То же, что `GET /settings`, отдаётся в `GET /me` полем `settings`.
+
+| Поле | Тип | По умолчанию | Валидация |
+|------|-----|--------------|-----------|
+| `timezone` | string | `UTC` | IANA (`timezone:all_with_bc`: принимаются и устаревшие имена вроде `Asia/Calcutta`), с учётом регистра |
+| `timezone_set` | bool, только чтение | `false` | `false`, пока клиент не передал пояс: приложению стоит отправить пояс устройства |
+| `new_cards_per_day` | int | `20` | `0…new_cards_per_day_max` |
+| `new_cards_per_day_max` | int, только чтение | `200` | потолок из `App\Support\RepetitionLimits` |
+| `reminder_hour` | int | `19` | `0…23`, час по `timezone` |
+| `email_reminders` | bool | `false` | согласие на email-напоминания |
+
+- Хранение — таблица `user_settings` (1:1, строка создаётся при первом `PUT`; до этого — значения по умолчанию из модели `UserSetting`).
+- Лимиты повторений (потолок новых карточек в день, наборов в повторениях — пока без ограничения) задаются только в `App\Support\RepetitionLimits`; фактический лимит новых — `min(настройка, потолок)`.
+- «День» повторений — с 04:00 до 04:00 по `timezone`: `App\Support\LocalDay::current($tz)` / `$user->settings->currentDay()` возвращает локальную дату и границы в UTC (в дни перехода времени — 23 или 25 часов).
 
 ## Auth API
 
