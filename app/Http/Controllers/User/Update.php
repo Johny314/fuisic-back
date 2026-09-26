@@ -22,6 +22,7 @@ class Update extends Controller
         path: Uri::user_id,
         tag: Tag::user,
         summary: 'Обновить данные пользователя',
+        description: 'Смена email сбрасывает `email_verified_at` и отправляет письмо подтверждения на новый адрес; до подтверждения вход по нему — 403.',
     )]
     #[ModelId('user', 'id пользователя')]
     #[RequestBody(Data::class)]
