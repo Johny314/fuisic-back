@@ -40,8 +40,12 @@ final class ContentAccess
      */
     public static function applyVisibleScope(Builder $query, string $ownerColumn = 'user_id'): void
     {
-        $user = self::user();
+        self::applyVisibleScopeFor($query, self::user(), $ownerColumn);
+    }
 
+    /** То же для заданного пользователя (сервисы, где текущий пользователь передаётся явно). */
+    public static function applyVisibleScopeFor(Builder $query, ?User $user, string $ownerColumn = 'user_id'): void
+    {
         if ($user?->isAdmin()) {
             return;
         }

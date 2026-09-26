@@ -7,6 +7,7 @@ use App\Http\Controllers\CardSet;
 use App\Http\Controllers\Child;
 use App\Http\Controllers\File\Store;
 use App\Http\Controllers\Filters;
+use App\Http\Controllers\Repetition;
 use App\Http\Controllers\Section;
 use App\Http\Controllers\Settings;
 use App\Http\Controllers\Task;
@@ -50,6 +51,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Только свои настройки: id в URI нет
     Route::get(Uri::settings->value, Settings\Show::class);
     Route::put(Uri::settings->value, Settings\Update::class);
+
+    // Интервальные повторения — только свои
+    Route::get(Uri::repetitions->value, Repetition\Index::class);
+    Route::get(Uri::repetitions_queue->value, Repetition\Queue::class);
+    Route::post(Uri::repetitions_set->value, Repetition\Store::class)->whereNumber('card_set');
+    Route::delete(Uri::repetitions_set->value, Repetition\Destroy::class)->whereNumber('card_set')->withTrashed();
+    Route::post(Uri::card_review->value, Repetition\Review::class)->whereNumber('card');
 
     // Аккаунты детей родителя; чужой ребёнок — 404
     Route::middleware('can:'.PermissionName::childrenView->value)->group(function () {

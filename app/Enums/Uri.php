@@ -42,4 +42,9 @@ enum Uri: string
     case teacher_verification = 'teacher_verification';
 
     case settings = 'settings';
+
+    case repetitions = 'repetitions';
+    case repetitions_queue = 'repetitions/queue';
+    case repetitions_set = 'repetitions/{card_set}';
+    case card_review = 'card/{card}/review';
 }

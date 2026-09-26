@@ -18,6 +18,7 @@ class CardReviewLog extends Model
     protected $fillable = [
         'user_id',
         'card_id',
+        'review_id',
         'rating',
         'reviewed_at',
         'duration_ms',
