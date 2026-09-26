@@ -5,3 +5,6 @@
 <x-backpack::menu-item title="Разделы" icon="la la-folder" :link="backpack_url('section')" />
 <x-backpack::menu-item title="Наборы карточек" icon="la la-clone" :link="backpack_url('card-set')" />
 <x-backpack::menu-item title="Тесты" icon="la la-tasks" :link="backpack_url('test')" />
+@if (backpack_user()?->can(\App\Enums\PermissionName::teachersVerify->value))
+    <x-backpack::menu-item title="Заявки учителей" icon="la la-user-check" :link="backpack_url('teacher-verification')" />
+@endif
